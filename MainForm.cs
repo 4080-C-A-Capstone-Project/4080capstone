@@ -42,47 +42,54 @@ namespace EncryptorApp
 
         private void btnEncrypt_Click(object sender, EventArgs e)
         {
-            string input;
-
-            if (rbText.Checked)
-            {
-                input = txtInput.Text;
-            }
-            else if (rbFile.Checked)
-            {
-                if (string.IsNullOrWhiteSpace(txtFilePath.Text) || !File.Exists(txtFilePath.Text))
-                {
-                    MessageBox.Show("Please select a valid file to encrypt.");
-                    return;
-                }
-                input = File.ReadAllText(txtFilePath.Text);
-            }
-            else
-            {
-                MessageBox.Show("Please select an input type.");
-                return;
-            }
-
+            string input = "";
             string method = cmbMethod.SelectedItem.ToString();
-            string output = "";
+            bool isFileInput = rbFile.Checked;
 
             try
             {
-                switch (method)
+                if (rbText.Checked)
                 {
-                    case "Caesar":
-                        output = Encryption.CaesarEncrypt(input);
-                        break;
-                    case "XOR":
-                        output = Encryption.XorEncrypt(input);
-                        break;
-                    case "AES":
-                        if (string.IsNullOrWhiteSpace(txtKey.Text))
-                            throw new Exception("Key is required for AES encryption.");
-                        output = Encryption.AESEncrypt(input, txtKey.Text);
-                        break;
+                    input = txtInput.Text;
+                }
+                else if (isFileInput)
+                {
+                    string filePath = txtFilePath.Text;
+
+                    if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
+                    {
+                        MessageBox.Show("Please select a valid file to encrypt.");
+                        return;
+                    }
+
+                    // Caesar and XOR only allowed for .txt files
+                    if ((method == "Caesar" || method == "XOR") && Path.GetExtension(filePath).ToLower() != ".txt")
+                    {
+                        MessageBox.Show($"{method} encryption only supports .txt files. Use AES for other file types.");
+                        return;
+                    }
+
+                    // Read file as text (works for .txt and AES-safe binary/text)
+                    input = File.ReadAllText(filePath);
+                }
+                else
+                {
+                    MessageBox.Show("Please select an input type.");
+                    return;
                 }
 
+                // Perform encryption
+                string output = method switch
+                {
+                    "Caesar" => Encryption.CaesarEncrypt(input),
+                    "XOR" => Encryption.XorEncrypt(input),
+                    "AES" => string.IsNullOrWhiteSpace(txtKey.Text)
+                             ? throw new Exception("Key is required for AES encryption.")
+                             : Encryption.AESEncrypt(input, txtKey.Text),
+                    _ => throw new Exception("Unknown encryption method.")
+                };
+
+                // Ask user where to save
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
                 saveFileDialog.Title = "Save Encrypted File";
                 saveFileDialog.FileName = "encrypted.txt";
@@ -101,6 +108,7 @@ namespace EncryptorApp
                 MessageBox.Show($"Encryption error: {ex.Message}");
             }
         }
+
 
         private void btnDecrypt_Click(object sender, EventArgs e)
         {
