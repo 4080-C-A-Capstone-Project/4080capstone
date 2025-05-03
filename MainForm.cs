@@ -2,11 +2,16 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using System.Security.Cryptography;
+using System.Text.RegularExpressions;
 
 namespace EncryptorApp
 {
     public partial class MainForm : Form
     {
+        private string currentUsername = "";
+        private Dictionary<string, string> userKeys = new();
+
         public MainForm()
         {
             InitializeComponent();
@@ -15,9 +20,98 @@ namespace EncryptorApp
             cmbDecrypt.Items.AddRange(new string[] { "Caesar", "XOR", "AES" });
             cmbDecrypt.SelectedIndex = 0;
 
-            // Ensure read-only for file path fields
             txtFilePath.ReadOnly = true;
             txtDecryptFile.ReadOnly = true;
+            txtKey.ReadOnly = true;
+
+            LoadLastUserFromFile();
+        }
+        private void LoadLastUserFromFile()
+        {
+            string path = "keys.aes";
+            if (!File.Exists(path))
+                return;
+
+            var lines = File.ReadAllLines(path);
+            if (lines.Length == 0)
+                return;
+
+            // Get the last username entry (assumes all lines are: Username - Method - Key)
+            string lastUsername = lines.Last().Split(" - ")[0];
+            currentUsername = lastUsername;
+            userKeys.Clear();
+
+            foreach (var line in lines)
+            {
+                var parts = line.Split(" - ");
+                if (parts.Length == 3 && parts[0] == currentUsername)
+                {
+                    string method = parts[1].Trim();
+                    string key = parts[2].Trim();
+                    userKeys[method] = key;
+                }
+            }
+
+            MessageBox.Show($"Loaded last user: {currentUsername}", "Welcome");
+
+        }
+
+        private void SetUsername_Click(object sender, EventArgs e)
+        {
+            string input = Microsoft.VisualBasic.Interaction.InputBox("Enter a username:", "Set Username", currentUsername);
+            if (string.IsNullOrWhiteSpace(input)) return;
+
+            currentUsername = input.Trim();
+            userKeys.Clear(); // reset
+
+            string caesarKey = GenerateNumericKey(4);
+            string xorKey = GenerateNumericKey(4);
+            string aesUserKey = GenerateAlphaNumKey(8);
+
+            userKeys["Caesar"] = caesarKey;
+            userKeys["XOR"] = xorKey;
+            userKeys["AES"] = aesUserKey;
+
+            var lines = userKeys.Select(kvp => $"{currentUsername} - {kvp.Key} - {kvp.Value}");
+            File.WriteAllLines("keys.aes", lines);
+            MessageBox.Show($"Keys saved to keys.aes for user: {currentUsername}");
+
+        }
+
+        private string GenerateNumericKey(int digits)
+        {
+            var rnd = new Random();
+            return string.Concat(Enumerable.Range(0, digits).Select(_ => rnd.Next(10).ToString()));
+        }
+
+        private string GenerateAlphaNumKey(int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            var rnd = new Random();
+            return new string(Enumerable.Range(0, length).Select(_ => chars[rnd.Next(chars.Length)]).ToArray());
+        }
+
+        private string GenerateFinalCaesarKey()
+        {
+            int shift = new Random().Next(1, 26); // shift: 1–25
+            int userNum = int.Parse(userKeys["Caesar"]);
+            return (shift + userNum).ToString();
+        }
+
+        private string GenerateFinalXorKey()
+        {
+            int shift = new Random().Next(1, 26);
+            int userNum = int.Parse(userKeys["XOR"]);
+            return (shift + userNum).ToString();
+        }
+
+        private string GenerateFinalAesKey()
+        {
+            string userKey = userKeys["AES"];
+            string base24 = GenerateAlphaNumKey(24);
+            var rnd = new Random();
+            int insertPos = rnd.Next(0, 25); // insert before pos
+            return base24.Substring(0, insertPos) + userKey + base24.Substring(insertPos);
         }
 
         private void btnBrowseFile_Click(object sender, EventArgs e)
@@ -45,6 +139,8 @@ namespace EncryptorApp
             string input = "";
             string method = cmbMethod.SelectedItem.ToString();
             bool isFileInput = rbFile.Checked;
+            string keyToUse = "";
+            string output = "";
 
             try
             {
@@ -78,16 +174,25 @@ namespace EncryptorApp
                     return;
                 }
 
-                // Perform encryption
-                string output = method switch
+                switch (method)
                 {
-                    "Caesar" => Encryption.CaesarEncrypt(input),
-                    "XOR" => Encryption.XorEncrypt(input),
-                    "AES" => string.IsNullOrWhiteSpace(txtKey.Text)
-                             ? throw new Exception("Key is required for AES encryption.")
-                             : Encryption.AESEncrypt(input, txtKey.Text),
-                    _ => throw new Exception("Unknown encryption method.")
-                };
+                    case "Caesar":
+                        keyToUse = GenerateFinalCaesarKey();
+                        txtKey.Text = keyToUse;
+                        output = Encryption.CaesarEncrypt(input, int.Parse(keyToUse));
+                        break;
+                    case "XOR":
+                        keyToUse = GenerateFinalXorKey();
+                        txtKey.Text = keyToUse;
+                        output = Encryption.XorEncrypt(input, (char)(int.Parse(keyToUse) % 256));
+                        break;
+                    case "AES":
+                        keyToUse = GenerateFinalAesKey();
+                        txtKey.Text = keyToUse;
+                        output = Encryption.AESEncrypt(input, keyToUse);
+                        break;
+                }
+
 
                 // Ask user where to save
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
@@ -126,13 +231,23 @@ namespace EncryptorApp
                 string selected = cmbDecrypt.SelectedItem.ToString();
 
                 if (method != selected)
-                    throw new Exception("Incorrect decryption method selected!");
+                {
+                    MessageBox.Show("Incorrect decryption method selected.");
+                    return;
+                }
+
+                string userEnteredKey = txtDecryptKey.Text.Trim();
+                if (string.IsNullOrWhiteSpace(userEnteredKey))
+                {
+                    MessageBox.Show("Please enter the decryption key.");
+                    return;
+                }
 
                 string output = selected switch
                 {
-                    "Caesar" => Encryption.CaesarDecrypt(encryptedText),
-                    "XOR" => Encryption.XorDecrypt(encryptedText),
-                    "AES" => Encryption.AESDecrypt(encryptedText, txtKey.Text),
+                    "Caesar" => Encryption.CaesarDecrypt(encryptedText, int.Parse(userEnteredKey)),
+                    "XOR" => Encryption.XorDecrypt(encryptedText, (char)(int.Parse(userEnteredKey) % 256)),
+                    "AES" => Encryption.AESDecrypt(encryptedText, userEnteredKey),
                     _ => throw new Exception("Unknown method selected.")
                 };
 
@@ -154,6 +269,7 @@ namespace EncryptorApp
                 MessageBox.Show($"Decryption error: {ex.Message}");
             }
         }
+
 
     }
 }

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("4080capstone")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+300792722782d4b6ded52faec1218f08da93fedb")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+223d9434748765011af6f79b1a25dedfcac08385")]
 [assembly: System.Reflection.AssemblyProductAttribute("4080capstone")]
 [assembly: System.Reflection.AssemblyTitleAttribute("4080capstone")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
