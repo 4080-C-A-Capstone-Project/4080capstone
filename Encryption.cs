@@ -54,5 +54,34 @@ namespace EncryptorApp
             byte[] result = decryptor.TransformFinalBlock(input, 0, input.Length);
             return Encoding.UTF8.GetString(result);
         }
+
+        public static byte[] AESEncryptBytes(byte[] data, string key)
+        {
+            using Aes aes = Aes.Create();
+            aes.Key = Encoding.UTF8.GetBytes(key.PadRight(32).Substring(0, 32));
+            aes.IV = new byte[16]; // Zero IV for simplicity; consider random for better security
+
+            using var ms = new MemoryStream();
+            using var cryptoStream = new CryptoStream(ms, aes.CreateEncryptor(), CryptoStreamMode.Write);
+            cryptoStream.Write(data, 0, data.Length);
+            cryptoStream.FlushFinalBlock();
+            return ms.ToArray();
+        }
+
+        public static byte[] AESDecryptBytes(byte[] encryptedData, string key)
+        {
+            using Aes aes = Aes.Create();
+            aes.Key = Encoding.UTF8.GetBytes(key.PadRight(32).Substring(0, 32));
+            aes.IV = new byte[16];
+
+            using var ms = new MemoryStream();
+            using var cryptoStream = new CryptoStream(ms, aes.CreateDecryptor(), CryptoStreamMode.Write);
+            cryptoStream.Write(encryptedData, 0, encryptedData.Length);
+            cryptoStream.FlushFinalBlock();
+            return ms.ToArray();
+        }
+
     }
+
+
 }

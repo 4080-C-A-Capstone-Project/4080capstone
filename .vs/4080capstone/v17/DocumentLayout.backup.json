@@ -7,6 +7,10 @@
       "RelativeMoniker": "D:0:0:{5864C26F-4A12-4479-8E11-7B9D87FCE086}|4080capstone.csproj|solutionrelative:mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{5864C26F-4A12-4479-8E11-7B9D87FCE086}|4080capstone.csproj|c:\\users\\addme\\documents\\github\\4080capstone\\encryption.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5864C26F-4A12-4479-8E11-7B9D87FCE086}|4080capstone.csproj|solutionrelative:encryption.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{5864C26F-4A12-4479-8E11-7B9D87FCE086}|4080capstone.csproj|c:\\users\\addme\\documents\\github\\4080capstone\\mainform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{5864C26F-4A12-4479-8E11-7B9D87FCE086}|4080capstone.csproj|solutionrelative:mainform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -15,11 +19,7 @@
       "RelativeMoniker": "D:0:0:{5864C26F-4A12-4479-8E11-7B9D87FCE086}|4080capstone.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{5864C26F-4A12-4479-8E11-7B9D87FCE086}|4080capstone.csproj|c:\\users\\addme\\documents\\github\\4080capstone\\encryption.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5864C26F-4A12-4479-8E11-7B9D87FCE086}|4080capstone.csproj|solutionrelative:encryption.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{5864C26F-4A12-4479-8E11-7B9D87FCE086}|4080capstone.csproj|c:\\users\\addme\\documents\\github\\4080capstone\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "AbsoluteMoniker": "D:0:0:{5864C26F-4A12-4479-8E11-7B9D87FCE086}|4080capstone.csproj|C:\\Users\\addme\\Documents\\GitHub\\4080capstone\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{5864C26F-4A12-4479-8E11-7B9D87FCE086}|4080capstone.csproj|solutionrelative:mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     }
   ],
@@ -34,13 +34,13 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "Encryption.cs",
               "DocumentMoniker": "C:\\Users\\addme\\Documents\\GitHub\\4080capstone\\Encryption.cs",
               "RelativeDocumentMoniker": "Encryption.cs",
               "ToolTip": "C:\\Users\\addme\\Documents\\GitHub\\4080capstone\\Encryption.cs",
               "RelativeToolTip": "Encryption.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAAAsAAAApAAAAAAAAAA==",
+              "ViewState": "AgIAADAAAAAAAAAAAAAmwEcAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-01T18:50:30.998Z",
               "IsPinned": true,
@@ -48,7 +48,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\addme\\Documents\\GitHub\\4080capstone\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
@@ -57,8 +57,7 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-01T18:51:26.346Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
@@ -74,7 +73,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "MainForm.Designer.cs",
               "DocumentMoniker": "C:\\Users\\addme\\Documents\\GitHub\\4080capstone\\MainForm.Designer.cs",
               "RelativeDocumentMoniker": "MainForm.Designer.cs",
@@ -93,7 +92,7 @@
               "RelativeDocumentMoniker": "MainForm.cs",
               "ToolTip": "C:\\Users\\addme\\Documents\\GitHub\\4080capstone\\MainForm.cs",
               "RelativeToolTip": "MainForm.cs",
-              "ViewState": "AgIAAFQAAAAAAAAAAAAwwA8BAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAADABAAAAAAAAAAAYwEkBAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-03T19:08:08.089Z",
               "EditorCaption": ""
