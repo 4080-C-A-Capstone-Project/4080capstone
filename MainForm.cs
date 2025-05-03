@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
+using System.Text;
 
 namespace EncryptorApp
 {
@@ -144,69 +145,97 @@ namespace EncryptorApp
 
             try
             {
-                if (rbText.Checked)
-                {
-                    input = txtInput.Text;
-                }
-                else if (isFileInput)
-                {
-                    string filePath = txtFilePath.Text;
+                string originalName = rbFile.Checked ? Path.GetFileNameWithoutExtension(txtFilePath.Text) : "EncryptedText";
+                string originalExt = rbFile.Checked ? Path.GetExtension(txtFilePath.Text) : ".txt";
 
-                    if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
-                    {
-                        MessageBox.Show("Please select a valid file to encrypt.");
-                        return;
-                    }
-
-                    // Caesar and XOR only allowed for .txt files
-                    if ((method == "Caesar" || method == "XOR") && Path.GetExtension(filePath).ToLower() != ".txt")
-                    {
-                        MessageBox.Show($"{method} encryption only supports .txt files. Use AES for other file types.");
-                        return;
-                    }
-
-                    // Read file as text (works for .txt and AES-safe binary/text)
-                    input = File.ReadAllText(filePath);
-                }
-                else
+                string methodExt = method switch
                 {
-                    MessageBox.Show("Please select an input type.");
+                    "Caesar" => ".cip",
+                    "XOR" => ".xor",
+                    "AES" => ".aes",
+                    _ => ".enc"
+                };
+
+                string finalFileName = $"{originalName}{methodExt}";
+
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.Title = "Save Encrypted File";
+                saveFileDialog.FileName = originalName;
+                saveFileDialog.Filter = "All Files|*.*";
+
+                if (saveFileDialog.ShowDialog() != DialogResult.OK)
+                {
+                    MessageBox.Show("Encryption cancelled.");
                     return;
                 }
+
+                string fullPath = Path.Combine(Path.GetDirectoryName(saveFileDialog.FileName), finalFileName);
 
                 switch (method)
                 {
                     case "Caesar":
                         keyToUse = GenerateFinalCaesarKey();
                         txtKey.Text = keyToUse;
+
+                        if (rbText.Checked)
+                            input = txtInput.Text;
+                        else if (isFileInput)
+                        {
+                            string path = txtFilePath.Text;
+                            if (Path.GetExtension(path).ToLower() != ".txt")
+                                throw new Exception("Caesar only supports .txt files.");
+                            input = File.ReadAllText(path);
+                        }
+                        else throw new Exception("Please select input type.");
+
                         output = Encryption.CaesarEncrypt(input, int.Parse(keyToUse));
+                        File.WriteAllText(fullPath, $"{method}\n{originalExt}\n{output}");
                         break;
+
                     case "XOR":
                         keyToUse = GenerateFinalXorKey();
                         txtKey.Text = keyToUse;
+
+                        if (rbText.Checked)
+                            input = txtInput.Text;
+                        else if (isFileInput)
+                        {
+                            string path = txtFilePath.Text;
+                            if (Path.GetExtension(path).ToLower() != ".txt")
+                                throw new Exception("XOR only supports .txt files.");
+                            input = File.ReadAllText(path);
+                        }
+                        else throw new Exception("Please select input type.");
+
                         output = Encryption.XorEncrypt(input, (char)(int.Parse(keyToUse) % 256));
+                        File.WriteAllText(fullPath, $"{method}\n{originalExt}\n{output}");
                         break;
+
                     case "AES":
                         keyToUse = GenerateFinalAesKey();
                         txtKey.Text = keyToUse;
-                        output = Encryption.AESEncrypt(input, keyToUse);
+
+                        if (rbText.Checked)
+                        {
+                            input = txtInput.Text;
+                            output = Encryption.AESEncrypt(input, keyToUse);
+                            File.WriteAllText(fullPath, $"{method}\n{originalExt}\n{output}");
+                        }
+                        else if (isFileInput)
+                        {
+                            byte[] rawBytes = File.ReadAllBytes(txtFilePath.Text);
+                            byte[] encryptedBytes = Encryption.AESEncryptBytes(rawBytes, keyToUse);
+
+                            using var fs = new FileStream(fullPath, FileMode.Create);
+                            using var writer = new BinaryWriter(fs);
+                            writer.Write(Encoding.UTF8.GetBytes($"{method}\n{originalExt}\n"));
+                            writer.Write(encryptedBytes);
+                        }
+                        else throw new Exception("Please select input type.");
                         break;
                 }
 
-
-                // Ask user where to save
-                SaveFileDialog saveFileDialog = new SaveFileDialog();
-                saveFileDialog.Title = "Save Encrypted File";
-                saveFileDialog.FileName = "encrypted.txt";
-                if (saveFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    File.WriteAllText(saveFileDialog.FileName, $"{method}\n{output}");
-                    MessageBox.Show("Encrypted file saved successfully.");
-                }
-                else
-                {
-                    MessageBox.Show("Encryption completed, but no file was saved.");
-                }
+                MessageBox.Show("Encrypted file saved successfully.");
             }
             catch (Exception ex)
             {
@@ -225,17 +254,7 @@ namespace EncryptorApp
                     return;
                 }
 
-                string[] lines = File.ReadAllLines(txtDecryptFile.Text);
-                string method = lines[0];
-                string encryptedText = string.Join("\n", lines.Skip(1));
-                string selected = cmbDecrypt.SelectedItem.ToString();
-
-                if (method != selected)
-                {
-                    MessageBox.Show("Incorrect decryption method selected.");
-                    return;
-                }
-
+                string method = cmbDecrypt.SelectedItem.ToString();
                 string userEnteredKey = txtDecryptKey.Text.Trim();
                 if (string.IsNullOrWhiteSpace(userEnteredKey))
                 {
@@ -243,32 +262,73 @@ namespace EncryptorApp
                     return;
                 }
 
-                string output = selected switch
-                {
-                    "Caesar" => Encryption.CaesarDecrypt(encryptedText, int.Parse(userEnteredKey)),
-                    "XOR" => Encryption.XorDecrypt(encryptedText, (char)(int.Parse(userEnteredKey) % 256)),
-                    "AES" => Encryption.AESDecrypt(encryptedText, userEnteredKey),
-                    _ => throw new Exception("Unknown method selected.")
-                };
+                string fileNameBase = Path.GetFileNameWithoutExtension(txtDecryptFile.Text);
 
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
                 saveFileDialog.Title = "Save Decrypted File";
-                saveFileDialog.FileName = "decrypted.txt";
-                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                saveFileDialog.FileName = fileNameBase;
+                saveFileDialog.Filter = "All Files|*.*";
+
+                if (saveFileDialog.ShowDialog() != DialogResult.OK)
                 {
-                    File.WriteAllText(saveFileDialog.FileName, output);
-                    MessageBox.Show("Decryption successful! File saved.");
+                    MessageBox.Show("Decryption cancelled.");
+                    return;
+                }
+
+                string fullSaveDir = Path.GetDirectoryName(saveFileDialog.FileName);
+
+                if (method == "AES")
+                {
+                    byte[] allBytes = File.ReadAllBytes(txtDecryptFile.Text);
+                    int firstNewline = Array.IndexOf(allBytes, (byte)'\n');
+                    int secondNewline = Array.IndexOf(allBytes, (byte)'\n', firstNewline + 1);
+                    if (firstNewline < 0 || secondNewline < 0)
+                        throw new Exception("Invalid file format.");
+
+                    string methodRead = Encoding.UTF8.GetString(allBytes[..firstNewline]);
+                    string originalExt = Encoding.UTF8.GetString(allBytes[(firstNewline + 1)..secondNewline]).Trim();
+                    if (methodRead != method)
+                        throw new Exception("Selected method does not match file.");
+
+                    byte[] encryptedBytes = allBytes[(secondNewline + 1)..];
+                    byte[] decryptedBytes = Encryption.AESDecryptBytes(encryptedBytes, userEnteredKey);
+
+                    string fullPath = Path.Combine(fullSaveDir, $"{fileNameBase}{originalExt}");
+                    File.WriteAllBytes(fullPath, decryptedBytes);
                 }
                 else
                 {
-                    MessageBox.Show("Decryption completed, but no file was saved.");
+                    string[] lines = File.ReadAllLines(txtDecryptFile.Text);
+                    string fileMethod = lines[0];
+                    if (fileMethod != method)
+                    {
+                        MessageBox.Show("Incorrect decryption method selected.");
+                        return;
+                    }
+
+                    string originalExt = lines[1];
+                    string encryptedText = string.Join("\n", lines.Skip(2));
+
+                    string output = method switch
+                    {
+                        "Caesar" => Encryption.CaesarDecrypt(encryptedText, int.Parse(userEnteredKey)),
+                        "XOR" => Encryption.XorDecrypt(encryptedText, (char)(int.Parse(userEnteredKey) % 256)),
+                        _ => throw new Exception("Unknown method.")
+                    };
+
+                    string fullPath = Path.Combine(fullSaveDir, $"{fileNameBase}{originalExt}");
+                    File.WriteAllText(fullPath, output);
                 }
+
+                MessageBox.Show("Decryption successful! File saved.");
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Decryption error: {ex.Message}");
             }
         }
+
+
 
 
     }
