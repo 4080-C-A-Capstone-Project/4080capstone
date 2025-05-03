@@ -25,6 +25,7 @@
         private System.Windows.Forms.Label lblEncryptMethod;
         private System.Windows.Forms.Label lblDecryptFile;
         private System.Windows.Forms.Label lblDecryptMethod;
+        private System.Windows.Forms.TextBox txtDecryptKey;
 
         protected override void Dispose(bool disposing)
         {
@@ -35,6 +36,11 @@
 
         private void InitializeComponent()
         {
+            lblDecryptKey = new Label();
+            txtDecryptKey = new TextBox();
+            menuStrip = new MenuStrip();
+            userMenu = new ToolStripMenuItem();
+            setUsernameMenuItem = new ToolStripMenuItem();
             txtInput = new TextBox();
             txtFilePath = new TextBox();
             txtDecryptFile = new TextBox();
@@ -54,11 +60,49 @@
             lblEncryptMethod = new Label();
             lblDecryptFile = new Label();
             lblDecryptMethod = new Label();
+            menuStrip.SuspendLayout();
             SuspendLayout();
+            // 
+            // lblDecryptKey
+            // 
+            lblDecryptKey.Location = new Point(221, 383);
+            lblDecryptKey.Name = "lblDecryptKey";
+            lblDecryptKey.Size = new Size(135, 23);
+            lblDecryptKey.TabIndex = 0;
+            lblDecryptKey.Text = "Enter decryption key:";
+            // 
+            // txtDecryptKey
+            // 
+            txtDecryptKey.Location = new Point(221, 409);
+            txtDecryptKey.Name = "txtDecryptKey";
+            txtDecryptKey.Size = new Size(300, 25);
+            txtDecryptKey.TabIndex = 1;
+            // 
+            // menuStrip
+            // 
+            menuStrip.Items.AddRange(new ToolStripItem[] { userMenu });
+            menuStrip.Location = new Point(0, 0);
+            menuStrip.Name = "menuStrip";
+            menuStrip.Size = new Size(537, 25);
+            menuStrip.TabIndex = 0;
+            // 
+            // userMenu
+            // 
+            userMenu.DropDownItems.AddRange(new ToolStripItem[] { setUsernameMenuItem });
+            userMenu.Name = "userMenu";
+            userMenu.Size = new Size(47, 21);
+            userMenu.Text = "User";
+            // 
+            // setUsernameMenuItem
+            // 
+            setUsernameMenuItem.Name = "setUsernameMenuItem";
+            setUsernameMenuItem.Size = new Size(157, 22);
+            setUsernameMenuItem.Text = "Set Username";
+            setUsernameMenuItem.Click += SetUsername_Click;
             // 
             // txtInput
             // 
-            txtInput.Location = new Point(20, 80);
+            txtInput.Location = new Point(22, 95);
             txtInput.Multiline = true;
             txtInput.Name = "txtInput";
             txtInput.Size = new Size(300, 60);
@@ -66,7 +110,7 @@
             // 
             // txtFilePath
             // 
-            txtFilePath.Location = new Point(20, 170);
+            txtFilePath.Location = new Point(22, 185);
             txtFilePath.Name = "txtFilePath";
             txtFilePath.ReadOnly = true;
             txtFilePath.Size = new Size(300, 25);
@@ -74,7 +118,7 @@
             // 
             // txtDecryptFile
             // 
-            txtDecryptFile.Location = new Point(20, 340);
+            txtDecryptFile.Location = new Point(22, 355);
             txtDecryptFile.Name = "txtDecryptFile";
             txtDecryptFile.ReadOnly = true;
             txtDecryptFile.Size = new Size(300, 25);
@@ -82,14 +126,14 @@
             // 
             // txtKey
             // 
-            txtKey.Location = new Point(150, 250);
+            txtKey.Location = new Point(128, 264);
             txtKey.Name = "txtKey";
-            txtKey.Size = new Size(170, 25);
+            txtKey.Size = new Size(289, 25);
             txtKey.TabIndex = 11;
             // 
             // rbText
             // 
-            rbText.Location = new Point(30, 30);
+            rbText.Location = new Point(32, 45);
             rbText.Name = "rbText";
             rbText.Size = new Size(104, 24);
             rbText.TabIndex = 1;
@@ -97,7 +141,7 @@
             // 
             // rbFile
             // 
-            rbFile.Location = new Point(140, 30);
+            rbFile.Location = new Point(142, 45);
             rbFile.Name = "rbFile";
             rbFile.Size = new Size(104, 24);
             rbFile.TabIndex = 2;
@@ -105,21 +149,21 @@
             // 
             // cmbMethod
             // 
-            cmbMethod.Location = new Point(20, 220);
+            cmbMethod.Location = new Point(22, 235);
             cmbMethod.Name = "cmbMethod";
             cmbMethod.Size = new Size(150, 25);
             cmbMethod.TabIndex = 9;
             // 
             // cmbDecrypt
             // 
-            cmbDecrypt.Location = new Point(20, 390);
+            cmbDecrypt.Location = new Point(22, 409);
             cmbDecrypt.Name = "cmbDecrypt";
             cmbDecrypt.Size = new Size(150, 25);
             cmbDecrypt.TabIndex = 17;
             // 
             // btnEncrypt
             // 
-            btnEncrypt.Location = new Point(20, 280);
+            btnEncrypt.Location = new Point(22, 295);
             btnEncrypt.Name = "btnEncrypt";
             btnEncrypt.Size = new Size(120, 30);
             btnEncrypt.TabIndex = 12;
@@ -128,7 +172,7 @@
             // 
             // btnDecrypt
             // 
-            btnDecrypt.Location = new Point(20, 420);
+            btnDecrypt.Location = new Point(22, 440);
             btnDecrypt.Name = "btnDecrypt";
             btnDecrypt.Size = new Size(120, 30);
             btnDecrypt.TabIndex = 18;
@@ -137,7 +181,7 @@
             // 
             // btnBrowseFile
             // 
-            btnBrowseFile.Location = new Point(330, 170);
+            btnBrowseFile.Location = new Point(332, 185);
             btnBrowseFile.Name = "btnBrowseFile";
             btnBrowseFile.Size = new Size(75, 23);
             btnBrowseFile.TabIndex = 7;
@@ -146,7 +190,7 @@
             // 
             // btnBrowseDecryptFile
             // 
-            btnBrowseDecryptFile.Location = new Point(330, 340);
+            btnBrowseDecryptFile.Location = new Point(332, 355);
             btnBrowseDecryptFile.Name = "btnBrowseDecryptFile";
             btnBrowseDecryptFile.Size = new Size(75, 23);
             btnBrowseDecryptFile.TabIndex = 15;
@@ -155,15 +199,15 @@
             // 
             // lblKey
             // 
-            lblKey.Location = new Point(20, 250);
+            lblKey.Location = new Point(22, 265);
             lblKey.Name = "lblKey";
-            lblKey.Size = new Size(124, 23);
+            lblKey.Size = new Size(100, 23);
             lblKey.TabIndex = 10;
-            lblKey.Text = "Key (for AES only):";
+            lblKey.Text = "Generated Key:";
             // 
             // lblInputType
             // 
-            lblInputType.Location = new Point(20, 10);
+            lblInputType.Location = new Point(22, 25);
             lblInputType.Name = "lblInputType";
             lblInputType.Size = new Size(114, 23);
             lblInputType.TabIndex = 0;
@@ -171,7 +215,7 @@
             // 
             // lblTextInput
             // 
-            lblTextInput.Location = new Point(20, 54);
+            lblTextInput.Location = new Point(22, 69);
             lblTextInput.Name = "lblTextInput";
             lblTextInput.Size = new Size(141, 23);
             lblTextInput.TabIndex = 3;
@@ -179,7 +223,7 @@
             // 
             // lblFileInput
             // 
-            lblFileInput.Location = new Point(20, 144);
+            lblFileInput.Location = new Point(22, 159);
             lblFileInput.Name = "lblFileInput";
             lblFileInput.Size = new Size(174, 23);
             lblFileInput.TabIndex = 5;
@@ -187,7 +231,7 @@
             // 
             // lblEncryptMethod
             // 
-            lblEncryptMethod.Location = new Point(20, 194);
+            lblEncryptMethod.Location = new Point(22, 209);
             lblEncryptMethod.Name = "lblEncryptMethod";
             lblEncryptMethod.Size = new Size(174, 23);
             lblEncryptMethod.TabIndex = 8;
@@ -195,7 +239,7 @@
             // 
             // lblDecryptFile
             // 
-            lblDecryptFile.Location = new Point(20, 314);
+            lblDecryptFile.Location = new Point(22, 329);
             lblDecryptFile.Name = "lblDecryptFile";
             lblDecryptFile.Size = new Size(141, 23);
             lblDecryptFile.TabIndex = 13;
@@ -203,7 +247,7 @@
             // 
             // lblDecryptMethod
             // 
-            lblDecryptMethod.Location = new Point(20, 364);
+            lblDecryptMethod.Location = new Point(22, 383);
             lblDecryptMethod.Name = "lblDecryptMethod";
             lblDecryptMethod.Size = new Size(193, 23);
             lblDecryptMethod.TabIndex = 16;
@@ -211,7 +255,10 @@
             // 
             // MainForm
             // 
-            ClientSize = new Size(450, 480);
+            ClientSize = new Size(537, 509);
+            Controls.Add(lblDecryptKey);
+            Controls.Add(txtDecryptKey);
+            Controls.Add(menuStrip);
             Controls.Add(lblInputType);
             Controls.Add(rbText);
             Controls.Add(rbFile);
@@ -231,10 +278,18 @@
             Controls.Add(lblDecryptMethod);
             Controls.Add(cmbDecrypt);
             Controls.Add(btnDecrypt);
+            MainMenuStrip = menuStrip;
             Name = "MainForm";
             Text = "EncryptorApp";
+            menuStrip.ResumeLayout(false);
+            menuStrip.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
+
+        private MenuStrip menuStrip;
+        private ToolStripMenuItem userMenu;
+        private ToolStripMenuItem setUsernameMenuItem;
+        private Label lblDecryptKey;
     }
 }
