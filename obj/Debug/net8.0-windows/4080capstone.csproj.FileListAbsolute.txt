@@ -3,7 +3,6 @@ C:\Users\addme\Documents\GitHub\4080capstone\bin\Debug\net8.0-windows\4080capsto
 C:\Users\addme\Documents\GitHub\4080capstone\bin\Debug\net8.0-windows\4080capstone.runtimeconfig.json
 C:\Users\addme\Documents\GitHub\4080capstone\bin\Debug\net8.0-windows\4080capstone.dll
 C:\Users\addme\Documents\GitHub\4080capstone\bin\Debug\net8.0-windows\4080capstone.pdb
-C:\Users\addme\Documents\GitHub\4080capstone\obj\Debug\net8.0-windows\EncryptorApp.MainForm.resources
 C:\Users\addme\Documents\GitHub\4080capstone\obj\Debug\net8.0-windows\4080capstone.csproj.GenerateResource.cache
 C:\Users\addme\Documents\GitHub\4080capstone\obj\Debug\net8.0-windows\4080capstone.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\addme\Documents\GitHub\4080capstone\obj\Debug\net8.0-windows\4080capstone.AssemblyInfoInputs.cache
@@ -15,3 +14,5 @@ C:\Users\addme\Documents\GitHub\4080capstone\obj\Debug\net8.0-windows\refint\408
 C:\Users\addme\Documents\GitHub\4080capstone\obj\Debug\net8.0-windows\4080capstone.pdb
 C:\Users\addme\Documents\GitHub\4080capstone\obj\Debug\net8.0-windows\4080capstone.genruntimeconfig.cache
 C:\Users\addme\Documents\GitHub\4080capstone\obj\Debug\net8.0-windows\ref\4080capstone.dll
+C:\Users\addme\Documents\GitHub\4080capstone\obj\Debug\net8.0-windows\_4080capstone.MainForm.resources
+C:\Users\addme\Documents\GitHub\4080capstone\obj\Debug\net8.0-windows\_4080capstone.TextInputForm.resources

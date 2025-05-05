@@ -6,16 +6,20 @@ using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Text;
 
-namespace EncryptorApp
+namespace _4080capstone
 {
     public partial class MainForm : Form
     {
         private string currentUsername = "";
         private Dictionary<string, string> userKeys = new();
+        private string savedTextInput = "";
 
         public MainForm()
         {
             InitializeComponent();
+            rbText.CheckedChanged += RbInputType_CheckedChanged;
+            rbFile.CheckedChanged += RbInputType_CheckedChanged;
+            rbText.Checked = true;
             cmbMethod.Items.AddRange(new string[] { "Caesar", "XOR", "AES" });
             cmbMethod.SelectedIndex = 0;
             cmbDecrypt.Items.AddRange(new string[] { "Caesar", "XOR", "AES" });
@@ -27,6 +31,32 @@ namespace EncryptorApp
 
             LoadLastUserFromFile();
         }
+
+        private void BtnOpenTextEditor_Click(object sender, EventArgs e)
+        {
+            using var textForm = new TextInputForm(savedTextInput);
+            if (textForm.ShowDialog() == DialogResult.OK)
+            {
+                savedTextInput = textForm.UserInput;
+                MessageBox.Show("Text saved.");
+            }
+        }
+
+
+        private void RbInputType_CheckedChanged(object sender, EventArgs e)
+        {
+            bool isText = rbText.Checked;
+
+            // Show/hide text input
+            btnOpenTextEditor.Visible = isText;
+            lblTextInput.Visible = isText;
+
+            // Show/hide file input
+            txtFilePath.Visible = !isText;
+            btnBrowseFile.Visible = !isText;
+            lblFileInput.Visible = !isText;
+        }
+
         private void LoadLastUserFromFile()
         {
             string path = "keys.aes";
@@ -182,7 +212,15 @@ namespace EncryptorApp
                         txtKey.Text = keyToUse;
 
                         if (rbText.Checked)
-                            input = txtInput.Text;
+                        {
+                            input = savedTextInput;
+                            if (string.IsNullOrWhiteSpace(input))
+                            {
+                                MessageBox.Show("No text input provided.");
+                                return;
+                            }
+                        }
+
                         else if (isFileInput)
                         {
                             string path = txtFilePath.Text;
@@ -199,9 +237,17 @@ namespace EncryptorApp
                     case "XOR":
                         keyToUse = GenerateFinalXorKey();
                         txtKey.Text = keyToUse;
-
+                        
                         if (rbText.Checked)
-                            input = txtInput.Text;
+                        {
+                            input = savedTextInput;
+                            if (string.IsNullOrWhiteSpace(input))
+                            {
+                                MessageBox.Show("No text input provided.");
+                                return;
+                            }
+                        }
+
                         else if (isFileInput)
                         {
                             string path = txtFilePath.Text;

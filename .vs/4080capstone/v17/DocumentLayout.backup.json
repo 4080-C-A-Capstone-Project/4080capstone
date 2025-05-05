@@ -7,20 +7,32 @@
       "RelativeMoniker": "D:0:0:{5864C26F-4A12-4479-8E11-7B9D87FCE086}|4080capstone.csproj|solutionrelative:mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{5864C26F-4A12-4479-8E11-7B9D87FCE086}|4080capstone.csproj|c:\\users\\addme\\documents\\github\\4080capstone\\encryption.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5864C26F-4A12-4479-8E11-7B9D87FCE086}|4080capstone.csproj|solutionrelative:encryption.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{5864C26F-4A12-4479-8E11-7B9D87FCE086}|4080capstone.csproj|c:\\users\\addme\\documents\\github\\4080capstone\\mainform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{5864C26F-4A12-4479-8E11-7B9D87FCE086}|4080capstone.csproj|solutionrelative:mainform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5864C26F-4A12-4479-8E11-7B9D87FCE086}|4080capstone.csproj|c:\\users\\addme\\documents\\github\\4080capstone\\textinputform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5864C26F-4A12-4479-8E11-7B9D87FCE086}|4080capstone.csproj|solutionrelative:textinputform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5864C26F-4A12-4479-8E11-7B9D87FCE086}|4080capstone.csproj|c:\\users\\addme\\documents\\github\\4080capstone\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{5864C26F-4A12-4479-8E11-7B9D87FCE086}|4080capstone.csproj|solutionrelative:mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5864C26F-4A12-4479-8E11-7B9D87FCE086}|4080capstone.csproj|c:\\users\\addme\\documents\\github\\4080capstone\\textinputform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{5864C26F-4A12-4479-8E11-7B9D87FCE086}|4080capstone.csproj|solutionrelative:textinputform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5864C26F-4A12-4479-8E11-7B9D87FCE086}|4080capstone.csproj|c:\\users\\addme\\documents\\github\\4080capstone\\textinputform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5864C26F-4A12-4479-8E11-7B9D87FCE086}|4080capstone.csproj|solutionrelative:textinputform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{5864C26F-4A12-4479-8E11-7B9D87FCE086}|4080capstone.csproj|c:\\users\\addme\\documents\\github\\4080capstone\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{5864C26F-4A12-4479-8E11-7B9D87FCE086}|4080capstone.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{5864C26F-4A12-4479-8E11-7B9D87FCE086}|4080capstone.csproj|C:\\Users\\addme\\Documents\\GitHub\\4080capstone\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{5864C26F-4A12-4479-8E11-7B9D87FCE086}|4080capstone.csproj|solutionrelative:mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+      "AbsoluteMoniker": "D:0:0:{5864C26F-4A12-4479-8E11-7B9D87FCE086}|4080capstone.csproj|c:\\users\\addme\\documents\\github\\4080capstone\\encryption.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5864C26F-4A12-4479-8E11-7B9D87FCE086}|4080capstone.csproj|solutionrelative:encryption.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,17 +42,17 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 7,
               "Title": "Encryption.cs",
               "DocumentMoniker": "C:\\Users\\addme\\Documents\\GitHub\\4080capstone\\Encryption.cs",
               "RelativeDocumentMoniker": "Encryption.cs",
               "ToolTip": "C:\\Users\\addme\\Documents\\GitHub\\4080capstone\\Encryption.cs",
               "RelativeToolTip": "Encryption.cs",
-              "ViewState": "AgIAADAAAAAAAAAAAAAmwEcAAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAXAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-01T18:50:30.998Z",
               "IsPinned": true,
@@ -48,38 +60,77 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 6,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\addme\\Documents\\GitHub\\4080capstone\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "C:\\Users\\addme\\Documents\\GitHub\\4080capstone\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAXAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-01T18:51:26.346Z",
-              "IsPinned": true
+              "IsPinned": true,
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
+              "Title": "TextInputForm.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\addme\\Documents\\GitHub\\4080capstone\\TextInputForm.cs",
+              "RelativeDocumentMoniker": "TextInputForm.cs",
+              "ToolTip": "C:\\Users\\addme\\Documents\\GitHub\\4080capstone\\TextInputForm.cs [Design]",
+              "RelativeToolTip": "TextInputForm.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-05T18:20:32.738Z",
+              "EditorCaption": " [Design]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "TextInputForm.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\addme\\Documents\\GitHub\\4080capstone\\TextInputForm.Designer.cs",
+              "RelativeDocumentMoniker": "TextInputForm.Designer.cs",
+              "ToolTip": "C:\\Users\\addme\\Documents\\GitHub\\4080capstone\\TextInputForm.Designer.cs",
+              "RelativeToolTip": "TextInputForm.Designer.cs",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAywBgAAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-05T18:20:04.644Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "MainForm.cs [Design]",
               "DocumentMoniker": "C:\\Users\\addme\\Documents\\GitHub\\4080capstone\\MainForm.cs",
               "RelativeDocumentMoniker": "MainForm.cs",
               "ToolTip": "C:\\Users\\addme\\Documents\\GitHub\\4080capstone\\MainForm.cs [Design]",
               "RelativeToolTip": "MainForm.cs [Design]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-03T19:11:11.082Z",
+              "WhenOpened": "2025-05-05T18:18:25.736Z",
               "EditorCaption": " [Design]"
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
+              "Title": "TextInputForm.cs",
+              "DocumentMoniker": "C:\\Users\\addme\\Documents\\GitHub\\4080capstone\\TextInputForm.cs",
+              "RelativeDocumentMoniker": "TextInputForm.cs",
+              "ToolTip": "C:\\Users\\addme\\Documents\\GitHub\\4080capstone\\TextInputForm.cs",
+              "RelativeToolTip": "TextInputForm.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAcAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-05T18:17:18.981Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "MainForm.Designer.cs",
               "DocumentMoniker": "C:\\Users\\addme\\Documents\\GitHub\\4080capstone\\MainForm.Designer.cs",
               "RelativeDocumentMoniker": "MainForm.Designer.cs",
               "ToolTip": "C:\\Users\\addme\\Documents\\GitHub\\4080capstone\\MainForm.Designer.cs",
               "RelativeToolTip": "MainForm.Designer.cs",
-              "ViewState": "AgIAAEgAAAAAAAAAAAAowBwAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAGkAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-03T19:08:40.451Z",
               "EditorCaption": ""
@@ -92,7 +143,7 @@
               "RelativeDocumentMoniker": "MainForm.cs",
               "ToolTip": "C:\\Users\\addme\\Documents\\GitHub\\4080capstone\\MainForm.cs",
               "RelativeToolTip": "MainForm.cs",
-              "ViewState": "AgIAADABAAAAAAAAAAAYwEkBAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAB8AAAAAAAAAAAAIwDMAAAAqAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-03T19:08:08.089Z",
               "EditorCaption": ""
