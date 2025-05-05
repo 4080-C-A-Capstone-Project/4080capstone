@@ -1,7 +1,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace EncryptorApp
+namespace _4080capstone
 {
     static class Program
     {
