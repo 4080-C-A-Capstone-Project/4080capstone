@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -54,6 +54,8 @@ namespace EncryptorApp
             }
 
             MessageBox.Show($"Loaded last user: {currentUsername}", "Welcome");
+            userMenu.Text = $"Current User: {currentUsername}";
+
 
         }
 
@@ -76,6 +78,8 @@ namespace EncryptorApp
             var lines = userKeys.Select(kvp => $"{currentUsername} - {kvp.Key} - {kvp.Value}");
             File.WriteAllLines("keys.aes", lines);
             MessageBox.Show($"Keys saved to keys.aes for user: {currentUsername}");
+            userMenu.Text = $"Current User: {currentUsername}";
+
 
         }
 
@@ -94,7 +98,7 @@ namespace EncryptorApp
 
         private string GenerateFinalCaesarKey()
         {
-            int shift = new Random().Next(1, 26); // shift: 1�25
+            int shift = new Random().Next(1, 26); // shift: 1–25
             int userNum = int.Parse(userKeys["Caesar"]);
             return (shift + userNum).ToString();
         }
@@ -262,12 +266,28 @@ namespace EncryptorApp
                     return;
                 }
 
-                string fileNameBase = Path.GetFileNameWithoutExtension(txtDecryptFile.Text);
+                string filePath = txtDecryptFile.Text;
+                string extension = Path.GetExtension(filePath).ToLower();
+                string fileNameBase = Path.GetFileNameWithoutExtension(filePath);
 
-                SaveFileDialog saveFileDialog = new SaveFileDialog();
-                saveFileDialog.Title = "Save Decrypted File";
-                saveFileDialog.FileName = fileNameBase;
-                saveFileDialog.Filter = "All Files|*.*";
+                // ✅ Check if extension matches selected method
+                bool extMatch = (method == "Caesar" && extension == ".cip") ||
+                                (method == "XOR" && extension == ".xor") ||
+                                (method == "AES" && extension == ".aes");
+
+                if (!extMatch)
+                {
+                    MessageBox.Show($"Error: Selected method '{method}' does not match file extension '{extension}'.", "Extension Mismatch", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Ask where to save
+                SaveFileDialog saveFileDialog = new SaveFileDialog
+                {
+                    Title = "Save Decrypted File",
+                    FileName = fileNameBase,
+                    Filter = "All Files|*.*"
+                };
 
                 if (saveFileDialog.ShowDialog() != DialogResult.OK)
                 {
@@ -276,38 +296,40 @@ namespace EncryptorApp
                 }
 
                 string fullSaveDir = Path.GetDirectoryName(saveFileDialog.FileName);
+                string fullPath;
 
                 if (method == "AES")
                 {
-                    byte[] allBytes = File.ReadAllBytes(txtDecryptFile.Text);
+                    byte[] allBytes = File.ReadAllBytes(filePath);
                     int firstNewline = Array.IndexOf(allBytes, (byte)'\n');
                     int secondNewline = Array.IndexOf(allBytes, (byte)'\n', firstNewline + 1);
                     if (firstNewline < 0 || secondNewline < 0)
-                        throw new Exception("Invalid file format.");
+                        throw new Exception("Invalid AES file format.");
 
-                    string methodRead = Encoding.UTF8.GetString(allBytes[..firstNewline]);
+                    string methodRead = Encoding.UTF8.GetString(allBytes[..firstNewline]).Trim();
                     string originalExt = Encoding.UTF8.GetString(allBytes[(firstNewline + 1)..secondNewline]).Trim();
-                    if (methodRead != method)
-                        throw new Exception("Selected method does not match file.");
 
                     byte[] encryptedBytes = allBytes[(secondNewline + 1)..];
                     byte[] decryptedBytes = Encryption.AESDecryptBytes(encryptedBytes, userEnteredKey);
-
-                    string fullPath = Path.Combine(fullSaveDir, $"{fileNameBase}{originalExt}");
+                    fullPath = Path.Combine(fullSaveDir, $"{fileNameBase}{originalExt}");
                     File.WriteAllBytes(fullPath, decryptedBytes);
                 }
                 else
                 {
-                    string[] lines = File.ReadAllLines(txtDecryptFile.Text);
-                    string fileMethod = lines[0];
+                    string[] lines = File.ReadAllLines(filePath);
+                    if (lines.Length < 3)
+                        throw new Exception("File format is invalid or incomplete.");
+
+                    string fileMethod = lines[0].Trim();
+                    string originalExt = lines[1].Trim();
+                    string encryptedText = string.Join("\n", lines.Skip(2));
+
+                    // Double check the file content method vs selected method
                     if (fileMethod != method)
                     {
-                        MessageBox.Show("Incorrect decryption method selected.");
+                        MessageBox.Show("Error: File contents indicate a different encryption method than selected.", "Method Mismatch", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
-
-                    string originalExt = lines[1];
-                    string encryptedText = string.Join("\n", lines.Skip(2));
 
                     string output = method switch
                     {
@@ -316,7 +338,7 @@ namespace EncryptorApp
                         _ => throw new Exception("Unknown method.")
                     };
 
-                    string fullPath = Path.Combine(fullSaveDir, $"{fileNameBase}{originalExt}");
+                    fullPath = Path.Combine(fullSaveDir, $"{fileNameBase}{originalExt}");
                     File.WriteAllText(fullPath, output);
                 }
 
@@ -327,6 +349,8 @@ namespace EncryptorApp
                 MessageBox.Show($"Decryption error: {ex.Message}");
             }
         }
+
+
 
 
 
