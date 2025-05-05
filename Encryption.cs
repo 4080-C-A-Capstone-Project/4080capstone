@@ -3,7 +3,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace EncryptorApp
+namespace _4080capstone
 {
     public static class Encryption
     {
