@@ -76,7 +76,7 @@
             // 
             txtDecryptKey.Location = new Point(221, 323);
             txtDecryptKey.Name = "txtDecryptKey";
-            txtDecryptKey.Size = new Size(300, 25);
+            txtDecryptKey.Size = new Size(300, 23);
             txtDecryptKey.TabIndex = 1;
             // 
             // menuStrip
@@ -84,20 +84,20 @@
             menuStrip.Items.AddRange(new ToolStripItem[] { userMenu });
             menuStrip.Location = new Point(0, 0);
             menuStrip.Name = "menuStrip";
-            menuStrip.Size = new Size(537, 25);
+            menuStrip.Size = new Size(537, 24);
             menuStrip.TabIndex = 0;
             // 
             // userMenu
             // 
             userMenu.DropDownItems.AddRange(new ToolStripItem[] { setUsernameMenuItem });
             userMenu.Name = "userMenu";
-            userMenu.Size = new Size(47, 21);
+            userMenu.Size = new Size(42, 20);
             userMenu.Text = "User";
             // 
             // setUsernameMenuItem
             // 
             setUsernameMenuItem.Name = "setUsernameMenuItem";
-            setUsernameMenuItem.Size = new Size(157, 22);
+            setUsernameMenuItem.Size = new Size(146, 22);
             setUsernameMenuItem.Text = "Set Username";
             setUsernameMenuItem.Click += SetUsername_Click;
             // 
@@ -115,7 +115,7 @@
             txtFilePath.Location = new Point(22, 95);
             txtFilePath.Name = "txtFilePath";
             txtFilePath.ReadOnly = true;
-            txtFilePath.Size = new Size(300, 25);
+            txtFilePath.Size = new Size(300, 23);
             txtFilePath.TabIndex = 6;
             // 
             // txtDecryptFile
@@ -123,14 +123,14 @@
             txtDecryptFile.Location = new Point(22, 269);
             txtDecryptFile.Name = "txtDecryptFile";
             txtDecryptFile.ReadOnly = true;
-            txtDecryptFile.Size = new Size(300, 25);
+            txtDecryptFile.Size = new Size(300, 23);
             txtDecryptFile.TabIndex = 14;
             // 
             // txtKey
             // 
             txtKey.Location = new Point(128, 178);
             txtKey.Name = "txtKey";
-            txtKey.Size = new Size(289, 25);
+            txtKey.Size = new Size(289, 23);
             txtKey.TabIndex = 11;
             // 
             // rbText
@@ -153,14 +153,14 @@
             // 
             cmbMethod.Location = new Point(22, 149);
             cmbMethod.Name = "cmbMethod";
-            cmbMethod.Size = new Size(150, 25);
+            cmbMethod.Size = new Size(150, 23);
             cmbMethod.TabIndex = 9;
             // 
             // cmbDecrypt
             // 
             cmbDecrypt.Location = new Point(22, 323);
             cmbDecrypt.Name = "cmbDecrypt";
-            cmbDecrypt.Size = new Size(150, 25);
+            cmbDecrypt.Size = new Size(150, 23);
             cmbDecrypt.TabIndex = 17;
             // 
             // btnEncrypt

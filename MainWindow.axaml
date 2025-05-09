@@ -11,15 +11,18 @@
 				<TextBlock Margin="5">
 					<StackPanel>
 						<TextBlock>Select input type</TextBlock>
-						<RadioButton GroupName="Input Type" Content="Text"/>
-						<RadioButton GroupName="Input Type" Content="File"/>
+						<RadioButton GroupName="inputType" Name="rbText" IsChecked="True" Content="Text"/>
+						<RadioButton GroupName="inputType" Name="rbFile" Content="File"/>
 
-						<TextBlock>Enter text to encrypt:</TextBlock>
+						<Label Name="lblTextInput">Enter text to encrypt:</Label>
+						<Button Name="btnOpenTextEditor" Click="BtnOpenTextEditor_Click">Enter text...</Button>
+
+						<Label Name="lblFileInput">Select file to encrypt:</Label>
+						<TextBox Name="txtFilePath" IsReadOnly="true"></TextBox>
+						<Button Name="btnBrowseFile">Browse</Button>
 
 						<TextBlock>Choose Encryption Method</TextBlock>
-						<ComboBox SelectedIndex="0">
-							<ComboBoxItem>thing</ComboBoxItem>
-							<ComboBoxItem>other thing</ComboBoxItem>
+						<ComboBox Name="encryptionComboBox" SelectedIndex="0">
 						</ComboBox>
 
 						<TextBlock>Generated Key</TextBlock>
@@ -36,9 +39,7 @@
 						<TextBox></TextBox>
 						<Button>Browse</Button>
 
-						<ComboBox>
-							<ComboBoxItem>erm</ComboBoxItem>
-							<ComboBoxItem>yeah</ComboBoxItem>
+						<ComboBox Name="decryptionComboBox" SelectedIndex="0">
 						</ComboBox>
 
 						<Label>Decryption Key</Label>
