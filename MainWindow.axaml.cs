@@ -77,7 +77,7 @@ public partial class MainWindow : Window
         }
 
         MessageBox.Show($"Loaded last user: {currentUsername}", "Welcome");
-        userMenu.Text = $"Current User: {currentUsername}";
+        userMenu.Header = $"Current User: {currentUsername}";
     }
 
 
@@ -100,7 +100,7 @@ public partial class MainWindow : Window
         var lines = userKeys.Select(kvp => $"{currentUsername} - {kvp.Key} - {kvp.Value}");
         File.WriteAllLines("keys.aes", lines);
         MessageBox.Show($"Keys saved to keys.aes for user: {currentUsername}");
-        userMenu.Text = $"Current User: {currentUsername}";
+        userMenu.Header = $"Current User: {currentUsername}";
 
 
     }
@@ -154,7 +154,7 @@ public partial class MainWindow : Window
 
         if (files.Count >= 1)
         {
-            txtFilePath.Text = files[0].Name;
+            txtFilePath.Text = files[0].TryGetLocalPath();
         }
     }
 
@@ -171,7 +171,7 @@ public partial class MainWindow : Window
 
         if (files.Count >= 1)
         {
-            txtDecryptFilePath.Text = files[0].Name;
+            txtDecryptFilePath.Text = files[0].TryGetLocalPath();
         }
     }
 
@@ -209,6 +209,7 @@ public partial class MainWindow : Window
                 return;
             }*/
 
+            string fullPath;
             var topLevel = GetTopLevel(this);
 
             var file = await topLevel.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
@@ -217,14 +218,13 @@ public partial class MainWindow : Window
                 SuggestedFileName = originalName,
                 FileTypeChoices = new[]
                 {
-                    new FilePickerFileType("All Files")
-                    {
-                        Patterns = new[] { "*.*" }  // Note the 'new[]' here
-                    }
+                    /*new FilePickerFileType("All Files") { Patterns = new[] { "*.*" } }*/
+                    new FilePickerFileType(method) { Patterns = new[] { $"*{methodExt}" } }
                 }
             });
-
-            string fullPath = Path.Combine(Path.GetDirectoryName(file.Name), finalFileName);
+            
+            // Try to get the local path (works on desktop platforms)
+            fullPath = file.TryGetLocalPath();
 
             switch (method)
             {
@@ -234,7 +234,7 @@ public partial class MainWindow : Window
 
                     if (rbText.IsChecked.GetValueOrDefault())
                     {
-                        input = savedTextInput;
+                        input = TextInputWindow.GetInstance().UserInput.Text;
                         if (string.IsNullOrWhiteSpace(input))
                         {
                             MessageBox.Show("No text input provided.");
@@ -356,24 +356,16 @@ public partial class MainWindow : Window
                 SuggestedFileName = fileNameBase,
                 FileTypeChoices = new[]
                 {
-                    new FilePickerFileType("All Files")
-                    {
-                        Patterns = new[] { "*.*" }  // Note the 'new[]' here
-                    }
+                    new FilePickerFileType("Normal text file") { Patterns = new[] { "*.txt*" }  },
+                    new FilePickerFileType("All Files") { Patterns = new[] { "*.*" }}
                 }
             });
-
-            /*if (saveFileDialog.ShowDialog() != DialogResult.OK)
-            {
-                MessageBox.Show("Decryption cancelled.");
-                return;
-            }*/
 
             /*string fullSaveDir = Path.GetDirectoryName(file);
             string fullPath;*/
 
-            string fullPath = file.Path.LocalPath;
-            string fullSaveDir = Path.GetDirectoryName(fullPath);
+            string fullPath = txtDecryptFilePath.Text;
+            string fullSaveDir = Path.GetDirectoryName(file.TryGetLocalPath());
 
 
             if (method == "AES")
