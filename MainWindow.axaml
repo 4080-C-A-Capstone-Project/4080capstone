@@ -7,9 +7,15 @@
         Title="super cool encryption program">
 	<StackPanel HorizontalAlignment="Center" VerticalAlignment="Top">
 		<TabControl Margin="5">
+			
+			<!-- Encryption Tab -->
 			<TabItem Header="Encrypt">
 				<TextBlock Margin="5">
 					<StackPanel>
+						<Menu>
+							<TextBlock Name="userMenu">User</TextBlock>
+						</Menu>
+
 						<TextBlock>Select input type</TextBlock>
 						<RadioButton GroupName="inputType" Name="rbText" IsChecked="True" Content="Text"/>
 						<RadioButton GroupName="inputType" Name="rbFile" Content="File"/>
@@ -19,35 +25,42 @@
 
 						<Label Name="lblFileInput">Select file to encrypt:</Label>
 						<TextBox Name="txtFilePath" IsReadOnly="true"></TextBox>
-						<Button Name="btnBrowseFile">Browse</Button>
+						<Button Click="btnBrowseFile_Click" Name="btnBrowseFile">Browse</Button>
 
 						<TextBlock>Choose Encryption Method</TextBlock>
-						<ComboBox Name="encryptionComboBox" SelectedIndex="0">
+						<ComboBox Name="encryptionMethod" SelectedIndex="0">
 						</ComboBox>
 
 						<TextBlock>Generated Key</TextBlock>
-						<TextBox></TextBox>
+						<TextBox IsReadOnly="True" Name="txtKey"></TextBox>
 
-						<Button>Encrypt Input</Button>
+						<Button Click="btnEncrypt_Click">Encrypt Input</Button>
 					</StackPanel>
 				</TextBlock>
 			</TabItem>
+
+
+			<!-- Decryption Tab-->
 			<TabItem Header="Decrypt">
 				<TextBlock Margin="5">
 					<StackPanel>
 						<TextBlock>Select file to decrypt</TextBlock>
-						<TextBox></TextBox>
-						<Button>Browse</Button>
+						<TextBox IsReadOnly="True" Name="txtDecryptFilePath"></TextBox>
+						<Button Click="btnBrowseDecryptFile_Click">Browse</Button>
 
-						<ComboBox Name="decryptionComboBox" SelectedIndex="0">
+						<ComboBox Name="decryptionMethod" SelectedIndex="0">
 						</ComboBox>
 
 						<Label>Decryption Key</Label>
-						<TextBox></TextBox>
+						<TextBox Name="txtDecryptKey"></TextBox>
+						<Button Click="btnDecrypt_Click">Decrypt</Button>
 					</StackPanel>
 				</TextBlock>
 			</TabItem>
+
+			<!-- TBA... Key/certificate management tab? Asymmetrical encryption -->
 		</TabControl>
+		
 		<!--
 		<Border
 			Margin="5"
