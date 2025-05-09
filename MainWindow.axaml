@@ -6,15 +6,17 @@
         x:Class="_4080capstone.MainWindow"
         Title="super cool encryption program">
 	<StackPanel HorizontalAlignment="Center" VerticalAlignment="Top">
+		<Menu>
+			<MenuItem Header="User" Name="userMenu">
+				<MenuItem Header="Set Username" Name="setUserBtn"></MenuItem>
+			</MenuItem>
+		</Menu>
 		<TabControl Margin="5">
 			
 			<!-- Encryption Tab -->
 			<TabItem Header="Encrypt">
 				<TextBlock Margin="5">
 					<StackPanel>
-						<Menu>
-							<TextBlock Name="userMenu">User</TextBlock>
-						</Menu>
 
 						<TextBlock>Select input type</TextBlock>
 						<RadioButton GroupName="inputType" Name="rbText" IsChecked="True" Content="Text"/>
