@@ -1,0 +1,72 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="_4080capstone.MainWindow"
+        Title="super cool encryption program">
+	<StackPanel HorizontalAlignment="Center" VerticalAlignment="Top">
+		<TabControl Margin="5">
+			<TabItem Header="Encrypt">
+				<TextBlock Margin="5">
+					<StackPanel>
+						<TextBlock>Select input type</TextBlock>
+						<RadioButton GroupName="Input Type" Content="Text"/>
+						<RadioButton GroupName="Input Type" Content="File"/>
+
+						<TextBlock>Enter text to encrypt:</TextBlock>
+
+						<TextBlock>Choose Encryption Method</TextBlock>
+						<ComboBox SelectedIndex="0">
+							<ComboBoxItem>thing</ComboBoxItem>
+							<ComboBoxItem>other thing</ComboBoxItem>
+						</ComboBox>
+
+						<TextBlock>Generated Key</TextBlock>
+						<TextBox></TextBox>
+
+						<Button>Encrypt Input</Button>
+					</StackPanel>
+				</TextBlock>
+			</TabItem>
+			<TabItem Header="Decrypt">
+				<TextBlock Margin="5">
+					<StackPanel>
+						<TextBlock>Select file to decrypt</TextBlock>
+						<TextBox></TextBox>
+						<Button>Browse</Button>
+
+						<ComboBox>
+							<ComboBoxItem>erm</ComboBoxItem>
+							<ComboBoxItem>yeah</ComboBoxItem>
+						</ComboBox>
+
+						<Label>Decryption Key</Label>
+						<TextBox></TextBox>
+					</StackPanel>
+				</TextBlock>
+			</TabItem>
+		</TabControl>
+		<!--
+		<Border
+			Margin="5"
+			CornerRadius="10"
+			Background="LightBlue">
+			<TextBlock Margin="5"
+					   FontSize="24">
+				TemperatureConverter
+			</TextBlock>
+		</Border>
+
+		<Grid Margin="5"
+			  ColumnDefinitions="120, 100"
+			  RowDefinitions="Auto, Auto, Auto">
+			<Label Grid.Row="0" Grid.Column="0" Margin="10">Celsius</Label>
+			<TextBox Grid.Row="0" Grid.Column="1" Margin="0 5" Text="0" Name="Celsius"/>
+			<Label Grid.Row="1" Grid.Column="0" Margin="10">Fahrenheit</Label>
+			<TextBox Grid.Row="1" Grid.Column="1" Margin="0 5" Text="0" IsReadOnly="True" Name="Fahrenheit"/>
+			<Button Grid.Row="2" Grid.Column="1" Click="Button_OnClick">Calculate</Button>
+		</Grid>
+		-->
+	</StackPanel>
+</Window>
