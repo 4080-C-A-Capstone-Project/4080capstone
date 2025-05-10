@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
@@ -77,7 +78,9 @@ namespace _4080capstone
             using var ms = new MemoryStream();
             using var cryptoStream = new CryptoStream(ms, aes.CreateDecryptor(), CryptoStreamMode.Write);
             cryptoStream.Write(encryptedData, 0, encryptedData.Length);
+            Debug.WriteLine("");
             cryptoStream.FlushFinalBlock();
+
             return ms.ToArray();
         }
 

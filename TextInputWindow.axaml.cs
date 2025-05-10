@@ -3,12 +3,15 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using DialogHostAvalonia;
+using MsBox.Avalonia;
+using MsBox.Avalonia.Base;
+using MsBox.Avalonia.Enums;
 
 namespace _4080capstone;
 
 public partial class TextInputWindow : Window
 {
-
+    IMsBox<ButtonResult> box;
     private TaskCompletionSource<string?>? _tcs;
     public bool Result { get; private set; }
 
@@ -26,7 +29,7 @@ public partial class TextInputWindow : Window
     }
 
 
-    private void SaveButton_Click(object? sender, RoutedEventArgs e)
+    private async void SaveButton_Click(object? sender, RoutedEventArgs e)
     {
         string input = UserInput.Text.Trim();
         if (!string.IsNullOrWhiteSpace(input))
@@ -35,7 +38,10 @@ public partial class TextInputWindow : Window
             _tcs?.TrySetResult(null);
         Close();
 
-        //MessageBox.Show("Saved text.");
+        box = MessageBoxManager
+                  .GetMessageBoxStandard("Success", "Saved text.",
+                            ButtonEnum.Ok);
+        await box.ShowAsync();
     }
 
     private void CancelButton_Click(object? sender, RoutedEventArgs e)

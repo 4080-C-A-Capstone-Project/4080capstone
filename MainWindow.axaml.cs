@@ -4,6 +4,9 @@ using Avalonia.Logging;
 using System.Diagnostics;
 using System.Text;
 using Avalonia.Platform.Storage;
+using MsBox.Avalonia.Enums;
+using MsBox.Avalonia;
+using MsBox.Avalonia.Base;
 
 namespace _4080capstone;
 
@@ -106,44 +109,12 @@ public partial class MainWindow : Window
         var lines = userKeys.Select(kvp => $"{currentUsername} - {kvp.Key} - {kvp.Value}");
         File.WriteAllLines("keys.aes", lines);
 
+        var box = MessageBoxManager
+            .GetMessageBoxStandard("Caption", $"Keys saved to keys.aes for user: {currentUsername}",
+                ButtonEnum.Ok);
+        var result = await box.ShowAsync();
         //MessageBoxBox.Show($"Keys saved to keys.aes for user: {currentUsername}");
         userMenu.Header = $"Current User: {currentUsername}";
-    }
-
-    private string GenerateNumericKey(int digits)
-    {
-        var rnd = new Random();
-        return string.Concat(Enumerable.Range(0, digits).Select(_ => rnd.Next(10).ToString()));
-    }
-
-    private string GenerateAlphaNumKey(int length)
-    {
-        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        var rnd = new Random();
-        return new string(Enumerable.Range(0, length).Select(_ => chars[rnd.Next(chars.Length)]).ToArray());
-    }
-
-    private string GenerateFinalCaesarKey()
-    {
-        int shift = new Random().Next(1, 26); // shift: 1–25
-        int userNum = int.Parse(userKeys["Caesar"]);
-        return (shift + userNum).ToString();
-    }
-
-    private string GenerateFinalXorKey()
-    {
-        int shift = new Random().Next(1, 26);
-        int userNum = int.Parse(userKeys["XOR"]);
-        return (shift + userNum).ToString();
-    }
-
-    private string GenerateFinalAesKey()
-    {
-        string userKey = userKeys["AES"];
-        string base24 = GenerateAlphaNumKey(24);
-        var rnd = new Random();
-        int insertPos = rnd.Next(0, 25); // insert before pos
-        return base24.Substring(0, insertPos) + userKey + base24.Substring(insertPos);
     }
 
     private async void btnBrowseFile_Click(object? sender, RoutedEventArgs e)
@@ -187,6 +158,7 @@ public partial class MainWindow : Window
         bool isFileInput = rbFile.IsChecked.GetValueOrDefault();
         string keyToUse = "";
         string output = "";
+        IMsBox<ButtonResult> box;
 
         try
         {
@@ -203,17 +175,6 @@ public partial class MainWindow : Window
 
             string finalFileName = $"{originalName}{methodExt}";
 
-            /*SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Title = "Save Encrypted File";
-            saveFileDialog.FileName = originalName;
-            saveFileDialog.Filter = "All Files|*.*";
-
-            if (saveFileDialog.ShowDialog() != DialogResult.OK)
-            {
-                //MessageBox.Show("Encryption cancelled.");
-                return;
-            }*/
-
             string fullPath;
             var topLevel = GetTopLevel(this);
 
@@ -223,13 +184,34 @@ public partial class MainWindow : Window
                 SuggestedFileName = originalName,
                 FileTypeChoices = new[]
                 {
-                    /*new FilePickerFileType("All Files") { Patterns = new[] { "*.*" } }*/
                     new FilePickerFileType(method) { Patterns = new[] { $"*{methodExt}" } }
                 }
             });
-            
+
+            if (file == null)
+            {
+                box = MessageBoxManager
+                    .GetMessageBoxStandard("", "Encryption cancelled.",
+                        ButtonEnum.Ok);
+                await box.ShowAsync();
+                return;
+            }
+
             // Try to get the local path (works on desktop platforms)
             fullPath = file.TryGetLocalPath();
+
+            if (!isFileInput) // Text input
+            {
+                input = savedTextInput;
+                if (string.IsNullOrWhiteSpace(input))
+                {
+                    box = MessageBoxManager
+                    .GetMessageBoxStandard("Input Error", "No text input provided.",
+                        ButtonEnum.Ok);
+                    await box.ShowAsync();
+                    return;
+                }
+            }
 
             switch (method)
             {
@@ -237,24 +219,14 @@ public partial class MainWindow : Window
                     keyToUse = GenerateFinalCaesarKey();
                     txtKey.Text = keyToUse;
 
-                    if (rbText.IsChecked.GetValueOrDefault())
-                    {
-                        input = savedTextInput;
-                        if (string.IsNullOrWhiteSpace(input))
-                        {
-                            //MessageBoxBox.Show("No text input provided.");
-                            return;
-                        }
-                    }
-
-                    else if (isFileInput)
+                    if (isFileInput)
                     {
                         string path = txtFilePath.Text;
                         if (Path.GetExtension(path).ToLower() != ".txt")
                             throw new Exception("Caesar only supports .txt files.");
                         input = File.ReadAllText(path);
                     }
-                    else throw new Exception("Please select input type.");
+                    // else throw new Exception("Please select input type.");
 
                     output = Encryption.CaesarEncrypt(input, int.Parse(keyToUse));
                     File.WriteAllText(fullPath, $"{method}\n{originalExt}\n{output}");
@@ -264,24 +236,14 @@ public partial class MainWindow : Window
                     keyToUse = GenerateFinalXorKey();
                     txtKey.Text = keyToUse;
 
-                    if (rbText.IsChecked.GetValueOrDefault())
-                    {
-                        input = savedTextInput;
-                        if (string.IsNullOrWhiteSpace(input))
-                        {
-                            //MessageBoxBox.Show("No text input provided.");
-                            return;
-                        }
-                    }
-
-                    else if (isFileInput)
+                    if (isFileInput)
                     {
                         string path = txtFilePath.Text;
                         if (Path.GetExtension(path).ToLower() != ".txt")
                             throw new Exception("XOR only supports .txt files.");
                         input = File.ReadAllText(path);
                     }
-                    else throw new Exception("Please select input type.");
+                    // else throw new Exception("Please select input type.");
 
                     output = Encryption.XorEncrypt(input, (char)(int.Parse(keyToUse) % 256));
                     File.WriteAllText(fullPath, $"{method}\n{originalExt}\n{output}");
@@ -291,9 +253,8 @@ public partial class MainWindow : Window
                     keyToUse = GenerateFinalAesKey();
                     txtKey.Text = keyToUse;
 
-                    if (rbText.IsChecked.GetValueOrDefault())
+                    if (!isFileInput) // text input
                     {
-                        input = savedTextInput;
                         output = Encryption.AESEncrypt(input, keyToUse);
                         File.WriteAllText(fullPath, $"{method}\n{originalExt}\n{output}");
                     }
@@ -307,33 +268,47 @@ public partial class MainWindow : Window
                         writer.Write(Encoding.UTF8.GetBytes($"{method}\n{originalExt}\n"));
                         writer.Write(encryptedBytes);
                     }
-                    else throw new Exception("Please select input type.");
+                    // else throw new Exception("Please select input type.");
                     break;
             }
 
-            //MessageBoxBox.Show("Encrypted file saved successfully.");
+            box = MessageBoxManager
+                  .GetMessageBoxStandard("Success", $"Encrypted file saved successfully as '{file.Name}'",
+                            ButtonEnum.Ok);
+            await box.ShowAsync();
         }
         catch (Exception ex)
         {
-            //MessageBoxBox.Show($"Encryption error: {ex.Message}");
+            box = MessageBoxManager
+                  .GetMessageBoxStandard("Error", $"Encryption error: {ex.Message}",
+                            ButtonEnum.Ok);
+            await box.ShowAsync();
         }
     }
 
     private async void btnDecrypt_Click(object? sender, RoutedEventArgs e)
     {
+        string chosenFileName;
+        IMsBox<ButtonResult> box;
         try
         {
             if (!File.Exists(txtDecryptFilePath.Text))
             {
-                //MessageBox.Show("Decryption file not found.");
+                box = MessageBoxManager
+                  .GetMessageBoxStandard("Input Error", $"File '{txtDecryptFilePath.Text}' not found.",
+                            ButtonEnum.Ok);
+                await box.ShowAsync();
                 return;
             }
 
-            string? method = encryptionMethod.SelectedItem?.ToString();
+            string? method = decryptionMethod.SelectedItem?.ToString();
             string? userEnteredKey = txtDecryptKey.Text?.Trim();
             if (string.IsNullOrWhiteSpace(userEnteredKey))
             {
-                //MessageBox.Show("Please enter the decryption key.");
+                box = MessageBoxManager
+                  .GetMessageBoxStandard("Input Error", "Please enter the decryption key.",
+                            ButtonEnum.Ok);
+                await box.ShowAsync();
                 return;
             }
 
@@ -348,10 +323,13 @@ public partial class MainWindow : Window
 
             if (!extMatch)
             {
+                box = MessageBoxManager
+                  .GetMessageBoxStandard("Input Error", $"Error: Selected method '{method}' does not match file extension '{extension}'.",
+                            ButtonEnum.Ok);
+                await box.ShowAsync();
                 //MessageBox.Show($"Error: Selected method '{method}' does not match file extension '{extension}'.", "Extension Mismatch", //MessageBoxButtons.OK, //MessageBoxIcon.Error);
                 return;
             }
-
 
             var topLevel = GetTopLevel(this);
 
@@ -366,6 +344,16 @@ public partial class MainWindow : Window
                 }
             });
 
+            if (file == null || file.Name == null)
+            {
+                box = MessageBoxManager
+                            .GetMessageBoxStandard("Cancelled", $"Decryption cancelled.",
+                            ButtonEnum.Ok);
+                await box.ShowAsync();
+                return;
+            } else {
+                chosenFileName = file.Name;
+            }
             /*string fullSaveDir = Path.GetDirectoryName(file);
             string fullPath;*/
 
@@ -384,9 +372,12 @@ public partial class MainWindow : Window
                 string methodRead = Encoding.UTF8.GetString(allBytes[..firstNewline]).Trim();
                 string originalExt = Encoding.UTF8.GetString(allBytes[(firstNewline + 1)..secondNewline]).Trim();
 
-                byte[] encryptedBytes = allBytes[(secondNewline + 1)..];
+                byte[] encryptedSection = allBytes[(secondNewline + 1)..];
+                string base64 = Encoding.UTF8.GetString(encryptedSection).Trim();
+                byte[] encryptedBytes = Convert.FromBase64String(base64);
                 byte[] decryptedBytes = Encryption.AESDecryptBytes(encryptedBytes, userEnteredKey);
-                fullPath = Path.Combine(fullSaveDir, $"{fileNameBase}{originalExt}");
+
+                fullPath = Path.Combine(fullSaveDir, $"{chosenFileName}{originalExt}");
                 File.WriteAllBytes(fullPath, decryptedBytes);
             }
             else
@@ -399,10 +390,13 @@ public partial class MainWindow : Window
                 string originalExt = lines[1].Trim();
                 string encryptedText = string.Join("\n", lines.Skip(2));
 
-                // Double check the file content method vs selected method
                 if (fileMethod != method)
                 {
                     //MessageBox.Show("Error: File contents indicate a different encryption method than selected.", "Method Mismatch", //MessageBoxButtons.OK, //MessageBoxIcon.Warning);
+                    box = MessageBoxManager
+                            .GetMessageBoxStandard("", $"Error: File contents indicate a different encryption method than selected.",
+                            ButtonEnum.Ok);
+                    await box.ShowAsync();
                     return;
                 }
 
@@ -412,17 +406,59 @@ public partial class MainWindow : Window
                     "XOR" => Encryption.XorDecrypt(encryptedText, (char)(int.Parse(userEnteredKey) % 256)),
                     _ => throw new Exception("Unknown method.")
                 };
-
                 fullPath = Path.Combine(fullSaveDir, $"{fileNameBase}{originalExt}");
                 File.WriteAllText(fullPath, output);
             }
 
-            //MessageBox.Show("Decryption successful! File saved.");
+            box = MessageBoxManager
+                    .GetMessageBoxStandard("Success", $"Decrypted file saved under '{fullPath}'.",
+                    ButtonEnum.Ok);
+            await box.ShowAsync();
+
         }
         catch (Exception ex)
         {
-            //MessageBox.Show($"Decryption error: {ex.Message}");
+            box = MessageBoxManager
+                    .GetMessageBoxStandard("Error", $"Decryption error: {ex.Message}",
+                    ButtonEnum.Ok);
+            await box.ShowAsync();
         }
+    }
+
+    private string GenerateNumericKey(int digits)
+    {
+        var rnd = new Random();
+        return string.Concat(Enumerable.Range(0, digits).Select(_ => rnd.Next(10).ToString()));
+    }
+
+    private string GenerateAlphaNumKey(int length)
+    {
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        var rnd = new Random();
+        return new string(Enumerable.Range(0, length).Select(_ => chars[rnd.Next(chars.Length)]).ToArray());
+    }
+
+    private string GenerateFinalCaesarKey()
+    {
+        int shift = new Random().Next(1, 26); // shift: 1–25
+        int userNum = int.Parse(userKeys["Caesar"]);
+        return (shift + userNum).ToString();
+    }
+
+    private string GenerateFinalXorKey()
+    {
+        int shift = new Random().Next(1, 26);
+        int userNum = int.Parse(userKeys["XOR"]);
+        return (shift + userNum).ToString();
+    }
+
+    private string GenerateFinalAesKey()
+    {
+        string userKey = userKeys["AES"];
+        string base24 = GenerateAlphaNumKey(24);
+        var rnd = new Random();
+        int insertPos = rnd.Next(0, 25); // insert before pos
+        return base24.Substring(0, insertPos) + userKey + base24.Substring(insertPos);
     }
 
 }
