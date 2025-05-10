@@ -8,50 +8,47 @@ namespace _4080capstone;
 
 public partial class TextInputWindow : Window
 {
-    private static TextInputWindow? _instance;
+
+    private TaskCompletionSource<string?>? _tcs;
     public bool Result { get; private set; }
 
-    public static TextInputWindow GetInstance(string savedInput = "")
+    public TextInputWindow()
     {
-        if (_instance == null)
-        {
-            _instance = new TextInputWindow();
-            _instance.UserInput.Text = savedInput;
-        }
-        return _instance;
+        InitializeComponent();
     }
 
-    public TextInputWindow() // this is public so that the Avalonia designer doesn't complain
+    public Task<string?> ShowDialogAsync(Window parent, string savedInput = "")
     {
-        if (_instance == null)
-            InitializeComponent();
+        UserInput.Text = savedInput;
+        _tcs = new TaskCompletionSource<string?>();
+        ShowDialog(parent); // modal
+        return _tcs.Task;
     }
+
 
     private void SaveButton_Click(object? sender, RoutedEventArgs e)
     {
-        Result = true;
-        Hide();
+        string input = UserInput.Text.Trim();
+        if (!string.IsNullOrWhiteSpace(input))
+            _tcs?.TrySetResult(input);
+        else
+            _tcs?.TrySetResult(null);
+        Close();
+
         //MessageBox.Show("Saved text.");
     }
 
     private void CancelButton_Click(object? sender, RoutedEventArgs e)
     {
-        Result = false;
-        Hide();
-    }
-
-    public new void Show()
-    {
-        if (!IsVisible)
-            base.Show();
-        else
-            Activate();
+        Close();
     }
 
     protected override void OnClosing(WindowClosingEventArgs e)
     {
-        Result = false;
-        Hide();
-        e.Cancel = true; // Prevent closing
+        if (!_tcs?.Task.IsCompleted ?? false)
+        {
+            _tcs?.TrySetResult(null); // Treat window close as cancel
+        }
+        base.OnClosing(e);
     }
 }

@@ -9,6 +9,6 @@
 	<StackPanel VerticalAlignment="Center" >
 		<Label>Enter username</Label>
 		<TextBox Name="UsernameInput"></TextBox>
-		<Button HorizontalAlignment="Right">Set Username</Button>
+		<Button HorizontalAlignment="Right" Name="SetUsernameBtn" Click="SetUsernameBtn_Click">Set Username</Button>
 	</StackPanel>
 </Window>

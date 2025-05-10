@@ -43,11 +43,16 @@ public partial class MainWindow : Window
         lblFileInput.IsVisible = !isText;
     }
 
-    private void BtnOpenTextEditor_Click(object? sender, RoutedEventArgs e)
+    private async void BtnOpenTextEditor_Click(object? sender, RoutedEventArgs e)
     {
-        var textForm = TextInputWindow.GetInstance();
-        textForm.Show();
+        var textForm = new TextInputWindow();
+        string? input = await textForm.ShowDialogAsync(this, savedTextInput);
+
+        if (string.IsNullOrWhiteSpace(input)) return;
+
+        savedTextInput = input.Trim();
     }
+
 
     private void LoadLastUserFromFile()
     {
@@ -80,12 +85,11 @@ public partial class MainWindow : Window
     }
 
 
-    private void SetUsername_Click(object? sender, RoutedEventArgs e)
+    private async void SetUsername_Click(object? sender, RoutedEventArgs e)
     {
-        /*var textForm = UsernameSetWindow.GetInstance();
-        textForm.Show();*/
+        var usernameWindow = new UsernameSetWindow();
 
-        string input = Microsoft.VisualBasic.Interaction.InputBox("Enter a username:", "Set Username", currentUsername);
+        string? input = await usernameWindow.ShowDialogAsync(this, currentUsername);
         if (string.IsNullOrWhiteSpace(input)) return;
 
         currentUsername = input.Trim();
@@ -101,6 +105,7 @@ public partial class MainWindow : Window
 
         var lines = userKeys.Select(kvp => $"{currentUsername} - {kvp.Key} - {kvp.Value}");
         File.WriteAllLines("keys.aes", lines);
+
         //MessageBoxBox.Show($"Keys saved to keys.aes for user: {currentUsername}");
         userMenu.Header = $"Current User: {currentUsername}";
     }
@@ -234,7 +239,7 @@ public partial class MainWindow : Window
 
                     if (rbText.IsChecked.GetValueOrDefault())
                     {
-                        input = TextInputWindow.GetInstance().UserInput.Text;
+                        input = savedTextInput;
                         if (string.IsNullOrWhiteSpace(input))
                         {
                             //MessageBoxBox.Show("No text input provided.");
@@ -288,7 +293,7 @@ public partial class MainWindow : Window
 
                     if (rbText.IsChecked.GetValueOrDefault())
                     {
-                        input = TextInputWindow.GetInstance().UserInput.Text ?? "";
+                        input = savedTextInput;
                         output = Encryption.AESEncrypt(input, keyToUse);
                         File.WriteAllText(fullPath, $"{method}\n{originalExt}\n{output}");
                     }

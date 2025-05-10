@@ -8,40 +8,37 @@ namespace _4080capstone;
 
 public partial class UsernameSetWindow : Window
 {
-    private static UsernameSetWindow? _instance;
+    private TaskCompletionSource<string?>? _tcs;
 
-    public static UsernameSetWindow GetInstance(string savedInput = "")
+    public UsernameSetWindow()
     {
-        if (_instance == null)
-        {
-            _instance = new UsernameSetWindow();
-            _instance.UsernameInput.Text = savedInput;
-        }
-        return _instance;
+        InitializeComponent();
     }
 
-    public UsernameSetWindow() // this is public so that the Avalonia designer doesn't complain
+    public Task<string?> ShowDialogAsync(Window parent, string savedInput = "")
     {
-        if (_instance == null)
-            InitializeComponent();
+        UsernameInput.Text = savedInput;
+        _tcs = new TaskCompletionSource<string?>();
+        ShowDialog(parent); // modal
+        return _tcs.Task;
     }
 
-    private void SaveButton_Click(object? sender, RoutedEventArgs e)
+    private void SetUsernameBtn_Click(object? sender, RoutedEventArgs e)
     {
-        Hide();
-    }
-
-    public new void Show()
-    {
-        if (!IsVisible)
-            base.Show();
+        string input = UsernameInput.Text.Trim();
+        if (!string.IsNullOrWhiteSpace(input))
+            _tcs?.TrySetResult(input);
         else
-            Activate();
+            _tcs?.TrySetResult(null);
+        Close();
     }
 
     protected override void OnClosing(WindowClosingEventArgs e)
     {
-        Hide();
-        e.Cancel = true; // Prevent closing
+        if (!_tcs?.Task.IsCompleted ?? false)
+        {
+            _tcs?.TrySetResult(null); // Treat window close as cancel
+        }
+        base.OnClosing(e);
     }
 }
