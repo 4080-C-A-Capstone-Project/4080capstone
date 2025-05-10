@@ -4,15 +4,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:dialogHostAvalonia="clr-namespace:DialogHostAvalonia;assembly=DialogHost.Avalonia"
 		mc:Ignorable="d"
-		d:DesignWidth="800" 
+		d:DesignWidth="800"
 		d:DesignHeight="450"
         x:Class="_4080capstone.TextInputWindow"
         Title="TextInputWindow"
 		CanResize="False">
 
 	<StackPanel>
-	    <TextBox Name="UserInput" Width="500" Height="400"></TextBox>
-	    <Button Name="saveButton" Click="SaveButton_Click">Save</Button>
-	    <Button Name="cancelButton" Click="CancelButton_Click">Cancel</Button>
+		<TextBox Name="UserInput" Width="500" Height="400"></TextBox>
+		<Button Name="saveButton" Click="SaveButton_Click">Save</Button>
+		<Button Name="cancelButton" Click="CancelButton_Click">Cancel</Button>
 	</StackPanel>
 </Window>

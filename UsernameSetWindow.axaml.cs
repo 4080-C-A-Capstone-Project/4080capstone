@@ -2,26 +2,25 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
-using DialogHostAvalonia;
+using System.Windows.Input;
 
 namespace _4080capstone;
 
-public partial class TextInputWindow : Window
+public partial class UsernameSetWindow : Window
 {
-    private static TextInputWindow? _instance;
-    public bool Result { get; private set; }
+    private static UsernameSetWindow? _instance;
 
-    public static TextInputWindow GetInstance(string savedInput = "")
+    public static UsernameSetWindow GetInstance(string savedInput = "")
     {
         if (_instance == null)
         {
-            _instance = new TextInputWindow();
-            _instance.UserInput.Text = savedInput;
+            _instance = new UsernameSetWindow();
+            _instance.UsernameInput.Text = savedInput;
         }
         return _instance;
     }
 
-    public TextInputWindow() // this is public so that the Avalonia designer doesn't complain
+    public UsernameSetWindow() // this is public so that the Avalonia designer doesn't complain
     {
         if (_instance == null)
             InitializeComponent();
@@ -29,14 +28,6 @@ public partial class TextInputWindow : Window
 
     private void SaveButton_Click(object? sender, RoutedEventArgs e)
     {
-        Result = true;
-        Hide();
-        MessageBox.Show("Saved text.");
-    }
-
-    private void CancelButton_Click(object? sender, RoutedEventArgs e)
-    {
-        Result = false;
         Hide();
     }
 
@@ -50,7 +41,6 @@ public partial class TextInputWindow : Window
 
     protected override void OnClosing(WindowClosingEventArgs e)
     {
-        Result = false;
         Hide();
         e.Cancel = true; // Prevent closing
     }

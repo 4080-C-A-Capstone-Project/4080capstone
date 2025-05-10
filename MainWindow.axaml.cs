@@ -81,8 +81,11 @@ public partial class MainWindow : Window
     }
 
 
-    private void SetUsername_Click(object sender, EventArgs e)
+    private void SetUsername_Click(object? sender, RoutedEventArgs e)
     {
+        /*var textForm = UsernameSetWindow.GetInstance();
+        textForm.Show();*/
+
         string input = Microsoft.VisualBasic.Interaction.InputBox("Enter a username:", "Set Username", currentUsername);
         if (string.IsNullOrWhiteSpace(input)) return;
 
@@ -101,8 +104,6 @@ public partial class MainWindow : Window
         File.WriteAllLines("keys.aes", lines);
         MessageBox.Show($"Keys saved to keys.aes for user: {currentUsername}");
         userMenu.Header = $"Current User: {currentUsername}";
-
-
     }
 
     private string GenerateNumericKey(int digits)
