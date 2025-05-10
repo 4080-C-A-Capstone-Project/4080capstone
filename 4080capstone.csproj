@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="TextInputWindow.axaml.cs">
+    <Compile Update="Views\TextInputWindow.axaml.cs">
       <DependentUpon>TextInputWindow.axaml</DependentUpon>
     </Compile>
   </ItemGroup>

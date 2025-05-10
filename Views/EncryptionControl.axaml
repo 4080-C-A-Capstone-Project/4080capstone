@@ -1,0 +1,28 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="_4080capstone.Views.EncryptionControl">
+	<StackPanel>
+		<TextBlock>Select input type</TextBlock>
+		<RadioButton GroupName="inputType" Name="rbText" IsChecked="True" Content="Text"/>
+		<RadioButton GroupName="inputType" Name="rbFile" Content="File"/>
+
+		<Label Name="lblTextInput">Enter text to encrypt:</Label>
+		<Button Name="btnOpenTextEditor" Click="BtnOpenTextEditor_Click">Enter text...</Button>
+
+		<Label Name="lblFileInput">Select file to encrypt:</Label>
+		<TextBox Name="txtFilePath" IsReadOnly="true"></TextBox>
+		<Button Click="btnBrowseFile_Click" Name="btnBrowseFile">Browse</Button>
+
+		<TextBlock>Choose Encryption Method</TextBlock>
+		<ComboBox Name="encryptionMethod" SelectedIndex="0">
+		</ComboBox>
+
+		<TextBlock>Generated Key</TextBlock>
+		<TextBox IsReadOnly="True" Name="txtKey"></TextBox>
+
+		<Button Click="btnEncrypt_Click">Encrypt Input</Button>
+	</StackPanel>
+</UserControl>

@@ -7,7 +7,7 @@ using MsBox.Avalonia;
 using MsBox.Avalonia.Base;
 using MsBox.Avalonia.Enums;
 
-namespace _4080capstone;
+namespace _4080capstone.Views;
 
 public partial class TextInputWindow : Window
 {
@@ -37,11 +37,6 @@ public partial class TextInputWindow : Window
         else
             _tcs?.TrySetResult(null);
         Close();
-
-        box = MessageBoxManager
-                  .GetMessageBoxStandard("Success", "Saved text.",
-                            ButtonEnum.Ok);
-        await box.ShowAsync();
     }
 
     private void CancelButton_Click(object? sender, RoutedEventArgs e)

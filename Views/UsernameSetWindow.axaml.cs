@@ -4,7 +4,7 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using System.Windows.Input;
 
-namespace _4080capstone;
+namespace _4080capstone.Views;
 
 public partial class UsernameSetWindow : Window
 {

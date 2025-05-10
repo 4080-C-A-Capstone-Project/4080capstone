@@ -4,7 +4,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace _4080capstone
+namespace _4080capstone.Services
 {
     public static class Encryption
     {

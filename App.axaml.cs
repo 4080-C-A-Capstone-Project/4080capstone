@@ -4,7 +4,7 @@ using Avalonia.Markup.Xaml;
 
 namespace _4080capstone;
 
-public partial class App : Avalonia.Application
+public partial class App : Application
 {
     public override void Initialize()
     {
@@ -15,7 +15,7 @@ public partial class App : Avalonia.Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            desktop.MainWindow = new MainWindow();
+            desktop.MainWindow = new Views.MainWindow();
         }
 
         base.OnFrameworkInitializationCompleted();
