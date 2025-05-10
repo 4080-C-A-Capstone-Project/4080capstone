@@ -31,7 +31,7 @@ public partial class TextInputWindow : Window
     {
         Result = true;
         Hide();
-        MessageBox.Show("Saved text.");
+        //MessageBox.Show("Saved text.");
     }
 
     private void CancelButton_Click(object? sender, RoutedEventArgs e)

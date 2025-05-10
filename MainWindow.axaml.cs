@@ -4,7 +4,6 @@ using Avalonia.Logging;
 using System.Diagnostics;
 using System.Text;
 using Avalonia.Platform.Storage;
-using System.Windows.Forms;
 
 namespace _4080capstone;
 
@@ -76,7 +75,7 @@ public partial class MainWindow : Window
             }
         }
 
-        MessageBox.Show($"Loaded last user: {currentUsername}", "Welcome");
+        //MessageBoxBox.Show($"Loaded last user: {currentUsername}", "Welcome");
         userMenu.Header = $"Current User: {currentUsername}";
     }
 
@@ -102,7 +101,7 @@ public partial class MainWindow : Window
 
         var lines = userKeys.Select(kvp => $"{currentUsername} - {kvp.Key} - {kvp.Value}");
         File.WriteAllLines("keys.aes", lines);
-        MessageBox.Show($"Keys saved to keys.aes for user: {currentUsername}");
+        //MessageBoxBox.Show($"Keys saved to keys.aes for user: {currentUsername}");
         userMenu.Header = $"Current User: {currentUsername}";
     }
 
@@ -206,7 +205,7 @@ public partial class MainWindow : Window
 
             if (saveFileDialog.ShowDialog() != DialogResult.OK)
             {
-                MessageBox.Show("Encryption cancelled.");
+                //MessageBox.Show("Encryption cancelled.");
                 return;
             }*/
 
@@ -238,7 +237,7 @@ public partial class MainWindow : Window
                         input = TextInputWindow.GetInstance().UserInput.Text;
                         if (string.IsNullOrWhiteSpace(input))
                         {
-                            MessageBox.Show("No text input provided.");
+                            //MessageBoxBox.Show("No text input provided.");
                             return;
                         }
                     }
@@ -265,7 +264,7 @@ public partial class MainWindow : Window
                         input = savedTextInput;
                         if (string.IsNullOrWhiteSpace(input))
                         {
-                            MessageBox.Show("No text input provided.");
+                            //MessageBoxBox.Show("No text input provided.");
                             return;
                         }
                     }
@@ -307,11 +306,11 @@ public partial class MainWindow : Window
                     break;
             }
 
-            MessageBox.Show("Encrypted file saved successfully.");
+            //MessageBoxBox.Show("Encrypted file saved successfully.");
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Encryption error: {ex.Message}");
+            //MessageBoxBox.Show($"Encryption error: {ex.Message}");
         }
     }
 
@@ -321,7 +320,7 @@ public partial class MainWindow : Window
         {
             if (!File.Exists(txtDecryptFilePath.Text))
             {
-                MessageBox.Show("Decryption file not found.");
+                //MessageBox.Show("Decryption file not found.");
                 return;
             }
 
@@ -329,7 +328,7 @@ public partial class MainWindow : Window
             string? userEnteredKey = txtDecryptKey.Text?.Trim();
             if (string.IsNullOrWhiteSpace(userEnteredKey))
             {
-                MessageBox.Show("Please enter the decryption key.");
+                //MessageBox.Show("Please enter the decryption key.");
                 return;
             }
 
@@ -344,7 +343,7 @@ public partial class MainWindow : Window
 
             if (!extMatch)
             {
-                MessageBox.Show($"Error: Selected method '{method}' does not match file extension '{extension}'.", "Extension Mismatch", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //MessageBox.Show($"Error: Selected method '{method}' does not match file extension '{extension}'.", "Extension Mismatch", //MessageBoxButtons.OK, //MessageBoxIcon.Error);
                 return;
             }
 
@@ -398,7 +397,7 @@ public partial class MainWindow : Window
                 // Double check the file content method vs selected method
                 if (fileMethod != method)
                 {
-                    MessageBox.Show("Error: File contents indicate a different encryption method than selected.", "Method Mismatch", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    //MessageBox.Show("Error: File contents indicate a different encryption method than selected.", "Method Mismatch", //MessageBoxButtons.OK, //MessageBoxIcon.Warning);
                     return;
                 }
 
@@ -413,11 +412,11 @@ public partial class MainWindow : Window
                 File.WriteAllText(fullPath, output);
             }
 
-            MessageBox.Show("Decryption successful! File saved.");
+            //MessageBox.Show("Decryption successful! File saved.");
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Decryption error: {ex.Message}");
+            //MessageBox.Show($"Decryption error: {ex.Message}");
         }
     }
 
