@@ -5,10 +5,15 @@
         mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="150"
         x:Class="_4080capstone.Views.UsernameSetWindow"
         Title="Set Username"
-		Padding="30">
+		Padding="30"
+		CanResize ="False"
+		Width="300"
+		Height="150">
 	<StackPanel VerticalAlignment="Center" >
 		<Label>Enter username</Label>
-		<TextBox Name="UsernameInput"></TextBox>
+		<TextBox Name="UsernameInput" Margin="0 5 0 10"></TextBox>
+		<!-- if invalid... color button green -->
 		<Button HorizontalAlignment="Right" Name="SetUsernameBtn" Click="SetUsernameBtn_Click">Set Username</Button>
+		<!-- cancel button? -->
 	</StackPanel>
 </Window>

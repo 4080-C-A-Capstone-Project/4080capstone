@@ -9,18 +9,30 @@ using MsBox.Avalonia;
 using MsBox.Avalonia.Base;
 using _4080capstone.Services;
 using _4080capstone.Models;
+using _4080capstone.ViewModels;
+using System.ComponentModel;
 
 namespace _4080capstone.Views;
 
 public partial class MainWindow : Window
 {
     private readonly AppState appState = AppState.Instance;
+    private MainWindowViewModel ViewModel => (MainWindowViewModel)DataContext;
 
     public MainWindow()
     {
         InitializeComponent();
         LoadLastUserFromFile();
+        DataContext = new MainWindowViewModel();
+        AppState.Instance.PropertyChanged += OnUsernameChange;
     }
+
+    private void ShowUserView(object sender, RoutedEventArgs e) => ViewModel.ShowUserView();
+    private void ShowEncryptionView(object sender, RoutedEventArgs e) => ViewModel.ShowEncryptionView();
+    private void ShowKeysView(object sender, RoutedEventArgs e) => ViewModel.ShowKeysView();
+
+    private void OnUsernameChange(object? sender, PropertyChangedEventArgs e) => UpdateWelcomeText();
+    private void UpdateWelcomeText() => WelcomeText.Text = $"Welcome, {AppState.Instance.CurrentUsername}!";
 
     private void LoadLastUserFromFile()
     {
@@ -48,37 +60,7 @@ public partial class MainWindow : Window
             }
         }
 
-        //MessageBoxBox.Show($"Loaded last user: {currentUsername}", "Welcome");
-        userMenu.Header = $"Current User: {appState.CurrentUsername}";
-    }
-
-    private async void SetUsername_Click(object? sender, RoutedEventArgs e)
-    {
-        var usernameWindow = new UsernameSetWindow();
-
-        string? input = await usernameWindow.ShowDialogAsync(this, appState.CurrentUsername);
-
-        if (string.IsNullOrWhiteSpace(input)) return;
-
-        appState.CurrentUsername = input.Trim();
-        userMenu.Header = $"Current User: {appState.CurrentUsername}";
-        appState.userKeys.Clear(); // reset
-
-        string caesarKey = KeyGenerator.GenerateNumericKey(4);
-        string xorKey = KeyGenerator.GenerateNumericKey(4);
-        string aesUserKey = KeyGenerator.GenerateAlphaNumKey(8);
-
-        appState.userKeys["Caesar"] = caesarKey;
-        appState.userKeys["XOR"] = xorKey;
-        appState.userKeys["AES"] = aesUserKey;
-
-        var lines = appState.userKeys.Select(kvp => $"{appState.CurrentUsername} - {kvp.Key} - {kvp.Value}");
-        File.WriteAllLines("keys.aes", lines);
-
-        var box = MessageBoxManager
-            .GetMessageBoxStandard("Success", $"Keys saved to keys.aes for user: {appState.CurrentUsername}",
-                ButtonEnum.Ok);
-        var result = await box.ShowWindowDialogAsync(TopLevel.GetTopLevel(this) as Window);
+        UpdateWelcomeText();
     }
 
 }

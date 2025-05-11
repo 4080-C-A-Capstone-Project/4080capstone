@@ -44,11 +44,12 @@ public partial class EncryptionControl : UserControl
         var textForm = new TextInputWindow();
         string? input = await textForm.ShowDialogAsync(TopLevel.GetTopLevel(this) as Window, appState.SavedTextInput);
 
+        if (string.IsNullOrWhiteSpace(input)) return;
+
         var box = MessageBoxManager
                   .GetMessageBoxStandard("Success", "Saved text.", ButtonEnum.Ok);
         var result = await box.ShowWindowDialogAsync(TopLevel.GetTopLevel(this) as Window);
 
-        if (string.IsNullOrWhiteSpace(input)) return;
 
         appState.SavedTextInput = input.Trim();
     }
@@ -147,7 +148,7 @@ public partial class EncryptionControl : UserControl
                     }
                     // else throw new Exception("Please select input type.");
 
-                    output = Encryption.CaesarEncrypt(input, int.Parse(keyToUse));
+                    output = SymmetricEncryption.CaesarEncrypt(input, int.Parse(keyToUse));
                     File.WriteAllText(fullPath, $"{method}\n{originalExt}\n{output}");
                     break;
 
@@ -164,7 +165,7 @@ public partial class EncryptionControl : UserControl
                     }
                     // else throw new Exception("Please select input type.");
 
-                    output = Encryption.XorEncrypt(input, (char)(int.Parse(keyToUse) % 256));
+                    output = SymmetricEncryption.XorEncrypt(input, (char)(int.Parse(keyToUse) % 256));
                     File.WriteAllText(fullPath, $"{method}\n{originalExt}\n{output}");
                     break;
 
@@ -174,13 +175,13 @@ public partial class EncryptionControl : UserControl
 
                     if (!isFileInput) // text input
                     {
-                        output = Encryption.AESEncrypt(input, keyToUse);
+                        output = SymmetricEncryption.AESEncrypt(input, keyToUse);
                         File.WriteAllText(fullPath, $"{method}\n{originalExt}\n{output}");
                     }
                     else if (isFileInput)
                     {
                         byte[] rawBytes = File.ReadAllBytes(txtFilePath.Text);
-                        byte[] encryptedBytes = Encryption.AESEncryptBytes(rawBytes, keyToUse);
+                        byte[] encryptedBytes = SymmetricEncryption.AESEncryptBytes(rawBytes, keyToUse);
 
                         using var fs = new FileStream(fullPath, FileMode.Create);
                         using var writer = new BinaryWriter(fs);

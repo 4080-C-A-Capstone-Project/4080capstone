@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="_4080capstone.Views.EncDecView"
+		     xmlns:local="clr-namespace:_4080capstone.Views">
+	<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+		<TabControl Margin="5">
+
+			<!-- Encryption Tab -->
+			<TabItem Header="Encrypt">
+				<local:EncryptionControl/>
+			</TabItem>
+
+			<!-- Decryption Tab-->
+			<TabItem Header="Decrypt">
+				<local:DecryptionControl/>
+			</TabItem>
+
+			<!-- TBA... Key/certificate management tab? Asymmetrical encryption. nah actually stick it under enc/dec -->
+		</TabControl>
+	</StackPanel>
+</UserControl>

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace _4080capstone.Services
 {
-    public static class Encryption
+    public static class SymmetricEncryption
     {
         public static string CaesarEncrypt(string text, int shift = 3)
         {

@@ -128,7 +128,7 @@ public partial class DecryptionControl : UserControl
                 byte[] encryptedSection = allBytes[(secondNewline + 1)..];
                 string base64 = Encoding.UTF8.GetString(encryptedSection).Trim();
                 byte[] encryptedBytes = Convert.FromBase64String(base64);
-                byte[] decryptedBytes = Encryption.AESDecryptBytes(encryptedBytes, userEnteredKey);
+                byte[] decryptedBytes = SymmetricEncryption.AESDecryptBytes(encryptedBytes, userEnteredKey);
 
                 fullPath = Path.Combine(fullSaveDir, $"{chosenFileName}{originalExt}");
                 File.WriteAllBytes(fullPath, decryptedBytes);
@@ -155,8 +155,8 @@ public partial class DecryptionControl : UserControl
 
                 string output = method switch
                 {
-                    "Caesar" => Encryption.CaesarDecrypt(encryptedText, int.Parse(userEnteredKey)),
-                    "XOR" => Encryption.XorDecrypt(encryptedText, (char)(int.Parse(userEnteredKey) % 256)),
+                    "Caesar" => SymmetricEncryption.CaesarDecrypt(encryptedText, int.Parse(userEnteredKey)),
+                    "XOR" => SymmetricEncryption.XorDecrypt(encryptedText, (char)(int.Parse(userEnteredKey) % 256)),
                     _ => throw new Exception("Unknown method.")
                 };
                 fullPath = Path.Combine(fullSaveDir, $"{chosenFileName}{originalExt}");

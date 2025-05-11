@@ -4,9 +4,9 @@ using Avalonia.Markup.Xaml;
 
 namespace _4080capstone.Views;
 
-public partial class TestUserControl : UserControl
+public partial class UserCardControl : UserControl
 {
-    public TestUserControl()
+    public UserCardControl()
     {
         InitializeComponent();
     }
