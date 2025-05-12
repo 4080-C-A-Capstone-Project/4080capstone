@@ -24,6 +24,10 @@ namespace _4080capstone.ViewModels
         {
             if (PgpKeys.Count == 0)
             {
+                string path = "keys";
+                if (!Directory.Exists(path))
+                    Directory.CreateDirectory(path);
+
                 var keyFiles = Directory.GetFiles("keys", "*.asc");
                 foreach (var file in keyFiles)
                 {

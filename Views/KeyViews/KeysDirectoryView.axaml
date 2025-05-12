@@ -17,6 +17,14 @@
 					<DataGridTextColumn Header="Created" Width="*" Binding="{Binding CreationDate}" />
 					<DataGridTextColumn Header="Key ID" Width="*" Binding="{Binding KeyId}" />
 				</DataGrid.Columns>
+
+				<DataGrid.ContextMenu>
+					<ContextMenu>
+						<MenuItem Header="Export key"/>
+						<!--Command="{Binding DataContext.YourCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+								  CommandParameter="{Binding}" -->
+					</ContextMenu>
+				</DataGrid.ContextMenu>
 		</DataGrid>
 		
 		<Grid  Margin="20 0" ColumnDefinitions="1* 1*" HorizontalAlignment="Right">

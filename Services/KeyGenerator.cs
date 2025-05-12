@@ -30,10 +30,12 @@ namespace _4080capstone.Services
             PgpPublicKeyRingBundle pubRing = new PgpPublicKeyRingBundle(PgpUtilities.GetDecoderStream(publicKeyStream));
             PgpPublicKey pubKey = pubRing.GetKeyRings().Cast<PgpPublicKeyRing>().First().GetPublicKeys().Cast<PgpPublicKey>().First(k => k.IsEncryptionKey);
 
+            string path = "keys";
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
             long keyId = pubKey.KeyId;
             string filename = $"{keyId:X}.asc";
-
-            Directory.CreateDirectory("keys");
             publicKeyStream.Position = 0;
             File.WriteAllBytes($"keys/{filename}", publicKeyStream.ToArray());
             privateKeyStream.Position = 0;

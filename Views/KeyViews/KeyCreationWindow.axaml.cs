@@ -43,6 +43,7 @@ public partial class KeyCreationWindow : Window
             {
                 KeyGenerator.GenerateKeyPair(Identity.Text, Passphrase.Text);
                 _tcs?.TrySetResult(true);
+                Close();
             }
             catch (Exception ex)
             {

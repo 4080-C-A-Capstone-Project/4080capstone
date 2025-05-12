@@ -20,7 +20,9 @@
 				  DisplayMemberBinding="{Binding DisplayName}"
 				  SelectedIndex="0">
 		</ComboBox>
-		<TextBox Name="privateKeyPassword" Watermark="Private Key Password"></TextBox>
+		<TextBox Name="privateKeyPassword" 
+				 PasswordChar="*"
+				 Watermark="Private Key Password"></TextBox>
 		<TextBox Name="txtDecryptKey"></TextBox>
 		<Button Click="btnDecrypt_Click">Decrypt</Button>
 	</StackPanel>
