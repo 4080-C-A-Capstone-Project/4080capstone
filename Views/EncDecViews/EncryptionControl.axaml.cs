@@ -211,7 +211,7 @@ public partial class EncryptionControl : UserControl
                         writer.Write(Encoding.UTF8.GetBytes($"{method}\n{originalExt}\n"));
                         writer.Write(encryptedBytes);
                     }
-                    // else throw new Exception("Please select input type.");
+                    else throw new Exception("Please select input type.");
                     break;
                 case "OpenPGP":
                     PgpKeyInfo keyInfo = (PgpKeyInfo)SavedEncryptionKeys.SelectedItem;

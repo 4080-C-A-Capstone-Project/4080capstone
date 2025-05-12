@@ -11,6 +11,7 @@ using MsBox.Avalonia;
 using System.Text;
 using _4080capstone.Models;
 using _4080capstone.ViewModels;
+using Org.BouncyCastle.Bcpg.OpenPgp;
 
 namespace _4080capstone.Views;
 
@@ -97,22 +98,36 @@ public partial class DecryptionControl : UserControl
                   .GetMessageBoxStandard("Input Error", $"Error: Selected method '{method}' does not match file extension '{extension}'.",
                             ButtonEnum.Ok);
                 await box.ShowAsync();
-                //MessageBox.Show($"Error: Selected method '{method}' does not match file extension '{extension}'.", "Extension Mismatch", //MessageBoxButtons.OK, //MessageBoxIcon.Error);
                 return;
             }
 
             var topLevel = TopLevel.GetTopLevel(this) as Window;
-
-            var file = await topLevel.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+            IStorageFile? file;
+            if (method == "OpenPGP")
             {
-                Title = "Save Decrypted File",
-                SuggestedFileName = fileNameBase,
-                FileTypeChoices = new[]
+                file = await topLevel.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
                 {
-                    new FilePickerFileType("Normal text file") { Patterns = new[] { "*.txt*" }  },
-                    new FilePickerFileType("All Files") { Patterns = new[] { "*.*" }}
-                }
-            });
+                    Title = "Save Decrypted File",
+                    SuggestedFileName = fileNameBase,
+                    FileTypeChoices = new[]
+                    {
+                        new FilePickerFileType("Original format") { Patterns = new[] { "*.*" }  }, // we can't get this until we decrypt :(
+                        new FilePickerFileType("Normal text file") { Patterns = new[] { "*.txt*" }  },
+                        new FilePickerFileType("All Files") { Patterns = new[] { "*.*" }}
+                    }
+                });
+            } else {
+                file = await topLevel.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+                {
+                    Title = "Save Decrypted File",
+                    SuggestedFileName = fileNameBase,
+                    FileTypeChoices = new[]
+                    {
+                        new FilePickerFileType("Normal text file") { Patterns = new[] { "*.txt*" }  },
+                        new FilePickerFileType("All Files") { Patterns = new[] { "*.*" }}
+                    }
+                });
+            }
 
             if (file == null || file.Name == null)
             {
@@ -129,7 +144,6 @@ public partial class DecryptionControl : UserControl
 
             string fullPath = txtDecryptFilePath.Text;
             string fullSaveDir = Path.GetDirectoryName(file.TryGetLocalPath());
-
 
             if (method == "AES")
             {
@@ -154,7 +168,8 @@ public partial class DecryptionControl : UserControl
                 PgpKeyInfo keyInfo = (PgpKeyInfo)SavedDecryptionKeys.SelectedItem;
                 string privateKey = File.ReadAllText(keyInfo.Path);
                 fullPath = Path.Combine(fullSaveDir, $"{chosenFileName}");
-                Encryption.PGPDecryptFile(filePath, fullPath, privateKey, privateKeyPassword.Text);
+                bool useOrigFileType = string.IsNullOrWhiteSpace(Path.GetExtension(fullPath));
+                await Encryption.PGPDecryptFile(filePath, fullPath, privateKey, privateKeyPassword.Text ?? "", useOrigFileType);
             }
             else
             {
@@ -168,7 +183,6 @@ public partial class DecryptionControl : UserControl
 
                 if (fileMethod != method)
                 {
-                    //MessageBox.Show("Error: File contents indicate a different encryption method than selected.", "Method Mismatch", //MessageBoxButtons.OK, //MessageBoxIcon.Warning);
                     box = MessageBoxManager
                             .GetMessageBoxStandard("", $"Error: File contents indicate a different encryption method than selected.",
                             ButtonEnum.Ok);
@@ -187,17 +201,27 @@ public partial class DecryptionControl : UserControl
             }
 
             box = MessageBoxManager
-                    .GetMessageBoxStandard("Success", $"Decrypted file saved under '{fullPath}'.",
+                    .GetMessageBoxStandard("Success", $"Decrypted file saved successfully.", 
                     ButtonEnum.Ok);
             await box.ShowWindowDialogAsync(TopLevel.GetTopLevel(this) as Window);
 
         }
         catch (Exception ex)
         {
-            box = MessageBoxManager
-                    .GetMessageBoxStandard("Error", $"Decryption error: {ex.Message}",
-                    ButtonEnum.Ok);
-            await box.ShowWindowDialogAsync(TopLevel.GetTopLevel(this) as Window);
+            if (ex.Message.Contains("checksum mismatch", StringComparison.OrdinalIgnoreCase))
+            {
+                box = MessageBoxManager
+                        .GetMessageBoxStandard("Error", $"Wrong private key password.",
+                        ButtonEnum.Ok);
+                await box.ShowWindowDialogAsync(TopLevel.GetTopLevel(this) as Window);
+            }
+            else
+            {
+                box = MessageBoxManager
+                        .GetMessageBoxStandard("Error", $"Decryption error: {ex.Message}",
+                        ButtonEnum.Ok);
+                await box.ShowWindowDialogAsync(TopLevel.GetTopLevel(this) as Window);
+            }
         }
     }
 

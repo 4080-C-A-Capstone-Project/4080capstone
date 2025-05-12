@@ -9,6 +9,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+using Org.BouncyCastle.Bcpg.OpenPgp;
+using PgpCore.Models;
 
 namespace _4080capstone.Services
 {
@@ -133,17 +135,37 @@ namespace _4080capstone.Services
             return decryptedContent;
         }
 
-        public async static Task PGPDecryptFile(string inputPath, string outputPath, string key, string? password = null)
+        public async static Task PGPDecryptFile(string inputPath, string outputPath, string key, string? password = null, bool useOrigExtension = false)
         {
-            EncryptionKeys encryptionKeys = new EncryptionKeys(key, password);
+            try
+            {
+                EncryptionKeys encryptionKeys = new EncryptionKeys(key, password);
 
-            // Reference input/output files
-            FileInfo inputFile = new FileInfo(inputPath);
-            FileInfo decryptedFile = new FileInfo(outputPath);
+                // Reference input/output files
+                FileInfo inputFile = new FileInfo(inputPath);
 
-            // Decrypt
-            PGP pgp = new PGP(encryptionKeys);
-            await pgp.DecryptAsync(inputFile, decryptedFile);
+                // Decrypt
+                PGP pgp = new PGP(encryptionKeys);
+                if (useOrigExtension)
+                {
+                    PgpInspectResult result = await pgp.InspectAsync(inputFile);
+                    if (Path.GetExtension(result.FileName) is string ext && Path.GetFileNameWithoutExtension(outputPath) is string strippedPath)
+                    {
+                        var fileName = strippedPath + ext;
+                        outputPath = Path.Combine(Path.GetDirectoryName(outputPath), fileName);
+                    }
+                }
+                FileInfo decryptedFile = new FileInfo(outputPath);
+
+                await pgp.DecryptAsync(inputFile, decryptedFile);
+            } catch (Exception e)
+            {
+                if (e.Message.Contains("checksum mismatch", StringComparison.OrdinalIgnoreCase)
+                    && new FileInfo(outputPath) is FileInfo outputFile
+                    && outputFile.Length == 0)
+                    outputFile.Delete();
+                throw;
+            }
         }
     }
 }
