@@ -23,6 +23,7 @@ public partial class EncryptionControl : UserControl
         rbText.IsCheckedChanged += RbInputType_CheckedChanged;
         rbFile.IsCheckedChanged += RbInputType_CheckedChanged;
         RbInputType_CheckedChanged(null, null);
+        //encryptionMethod.SelectionChanged +=
     }
 
     private void RbInputType_CheckedChanged(object? sender, EventArgs? e)

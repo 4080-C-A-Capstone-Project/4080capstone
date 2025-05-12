@@ -9,15 +9,20 @@
 		<RadioButton GroupName="inputType" Name="rbText" IsChecked="True" Content="Text"/>
 		<RadioButton GroupName="inputType" Name="rbFile" Content="File"/>
 
-		<Label Name="lblTextInput">Enter text to encrypt:</Label>
+		<Label Name="lblTextInput">Text to encrypt</Label>
 		<Button Name="btnOpenTextEditor" Click="BtnOpenTextEditor_Click">Enter text...</Button>
 
-		<Label Name="lblFileInput">Select file to encrypt:</Label>
+		<Label Name="lblFileInput">File to encrypt</Label>
 		<TextBox Name="txtFilePath" IsReadOnly="true"></TextBox>
 		<Button Click="btnBrowseFile_Click" Name="btnBrowseFile">Browse</Button>
 
-		<TextBlock>Choose Encryption Method</TextBlock>
+		<TextBlock>Encryption Method</TextBlock>
 		<ComboBox Name="encryptionMethod" SelectedIndex="0">
+		</ComboBox>
+
+		<Label Name="lblKeyInput">Encryption Key</Label>
+		<ComboBox Name="SavedEncryptionKeys" SelectedIndex="0">
+			
 		</ComboBox>
 
 		<TextBlock>Generated Key</TextBlock>

@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace _4080capstone.Services
 {
-    // encryptions with PGP key
-    class AsymmetricEncryption
+    class UserService
     {
+        // Func to retrieve existing users based on directory
+        // Func to get their public/private keys from the directory
     }
 }

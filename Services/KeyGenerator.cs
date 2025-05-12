@@ -1,4 +1,7 @@
 ﻿using _4080capstone.Models;
+using _4080capstone.ViewModels;
+using Org.BouncyCastle.Bcpg.OpenPgp;
+using PgpCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +10,39 @@ using System.Threading.Tasks;
 
 namespace _4080capstone.Services
 {
-
     public static class KeyGenerator
     {
+        public static async void GenerateKeyPair(string identity, string passphrase)
+        {
+            PGP pgp = new PGP();
+
+            // Generate keypair in memory
+            using var publicKeyStream = new MemoryStream();
+            using var privateKeyStream = new MemoryStream();
+            await pgp.GenerateKeyAsync(
+                publicKeyStream, privateKeyStream,
+                username: identity, // E-mail or username
+                password: passphrase
+            );
+            publicKeyStream.Position = 0;
+
+            // Extract key ID from generated key
+            PgpPublicKeyRingBundle pubRing = new PgpPublicKeyRingBundle(PgpUtilities.GetDecoderStream(publicKeyStream));
+            PgpPublicKey pubKey = pubRing.GetKeyRings().Cast<PgpPublicKeyRing>().First().GetPublicKeys().Cast<PgpPublicKey>().First(k => k.IsEncryptionKey);
+
+            long keyId = pubKey.KeyId;
+            string filename = $"{keyId:X}.asc";
+
+            Directory.CreateDirectory("keys");
+            publicKeyStream.Position = 0;
+            File.WriteAllBytes($"keys/{filename}", publicKeyStream.ToArray());
+            privateKeyStream.Position = 0;
+            File.WriteAllBytes($"keys/{filename.Replace(".asc", "_private.asc")}", privateKeyStream.ToArray());
+
+            KeyRingViewModel.ParseAndAddKey($"keys/{filename}");
+            KeyRingViewModel.ParseAndAddKey($"keys/{filename.Replace(".asc", "_private.asc")}");
+        }
+
         public static string GenerateNumericKey(int digits)
         {
             var rnd = new Random();

@@ -1,0 +1,38 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        x:Class="_4080capstone.KeyCreationWindow"
+        Title="Create New OpenPGP Key Pair"
+		CanResize="False"
+		Width="500"
+		SizeToContent="Height"
+		Padding="25">
+
+	<StackPanel>
+		<TextBlock Margin="10">Enter an identity and a password (optional) to sign the certificate.</TextBlock>
+		<Separator></Separator>
+		
+		<Label>Name or Email Address</Label>
+		<TextBox Name="Identity"></TextBox>
+		<Label>Password (Optional)</Label>
+		<TextBox Name="Passphrase"></TextBox>
+
+		<!--<Label Margin="0 10 0 0">Valid for</Label>
+		<ComboBox SelectedIndex="2">
+			<ComboBoxItem>1 year</ComboBoxItem>
+			<ComboBoxItem>2 years</ComboBoxItem>
+			<ComboBoxItem>3 years</ComboBoxItem>
+			<ComboBoxItem>4 years</ComboBoxItem>
+			<ComboBoxItem>5 years</ComboBoxItem>
+		</ComboBox>
+		<TextBlock Grid.Row="4" Margin="0 10">Key Material: curve25519</TextBlock>-->
+		
+		<StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+			<Button Margin="5" Width="80" Click="OKButton_Click" HorizontalContentAlignment="Center" >OK</Button>
+			<Button Grid.Column="1" Width="80" Click="CancelButton_Click" HorizontalContentAlignment="Center" >Cancel</Button>
+		</StackPanel>
+	</StackPanel>
+  
+</Window>

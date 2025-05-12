@@ -25,6 +25,7 @@ public partial class MainWindow : Window
         LoadLastUserFromFile();
         DataContext = new MainWindowViewModel();
         AppState.Instance.PropertyChanged += OnUsernameChange;
+        KeyRingViewModel.InitializeKeyCollection();
     }
 
     private void ShowUserView(object sender, RoutedEventArgs e) => ViewModel.ShowUserView();

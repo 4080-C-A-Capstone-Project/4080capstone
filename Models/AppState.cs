@@ -1,5 +1,8 @@
-﻿using System;
+﻿using _4080capstone.Services;
+using Org.BouncyCastle.Bcpg.OpenPgp;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
@@ -28,9 +31,9 @@ namespace _4080capstone.Models
             }
         }
 
-        public Dictionary<string, string> userKeys = new();
+        public Dictionary<string, string> userKeys = new(); // session keys
         public string SavedTextInput { get; set; } = "";
-        public string[] EncryptionOptions = { "Caesar", "XOR", "AES" }; // maybe make dictionary or tuple to store descriptions
+        public string[] EncryptionOptions = { "Caesar", "XOR", "AES", "OpenPGP" }; // maybe make dictionary or tuple to store descriptions
 
         protected void OnPropertyChanged(string name)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));

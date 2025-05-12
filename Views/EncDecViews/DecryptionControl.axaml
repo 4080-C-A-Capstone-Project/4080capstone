@@ -5,14 +5,17 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="_4080capstone.Views.DecryptionControl">
 	<StackPanel>
-		<TextBlock>Select file to decrypt</TextBlock>
+		<TextBlock>File to decrypt</TextBlock>
 		<TextBox IsReadOnly="True" Name="txtDecryptFilePath"></TextBox>
 		<Button Click="btnBrowseDecryptFile_Click">Browse</Button>
 
+		<TextBlock>Decryption Method</TextBlock>
 		<ComboBox Name="decryptionMethod" SelectedIndex="0">
 		</ComboBox>
 
+		
 		<Label>Decryption Key</Label>
+		<ComboBox Name="SavedDecryptionKeys" SelectedIndex="0"></ComboBox>
 		<TextBox Name="txtDecryptKey"></TextBox>
 		<Button Click="btnDecrypt_Click">Decrypt</Button>
 	</StackPanel>

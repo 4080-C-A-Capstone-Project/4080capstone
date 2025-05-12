@@ -7,7 +7,8 @@
     
     <StackPanel HorizontalAlignment="Center">
         <Button Content="Set Username" Click="SetUsername_Click" Name="setUserBtn"></Button>
-	    <Ellipse Width="100" Height="100" Fill="Pink" />
+		<TextBlock>
+			Display session keys here?
+		</TextBlock>
     </StackPanel>
-
 </UserControl>

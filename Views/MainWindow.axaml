@@ -5,18 +5,37 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="_4080capstone.Views.MainWindow"
 		xmlns:local="clr-namespace:_4080capstone.Views"
+		xmlns:interactivity="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+		xmlns:interactions="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
         Title="Crypt#">
-
+	<Window.Styles>
+		<!-- Sidebar Buttons -->
+		<Style Selector="Button.sidebar">
+			<Setter Property="HorizontalAlignment" Value="Stretch"/>
+			<Setter Property="Padding" Value="30 10"/>
+			<Setter Property="FontSize" Value="17"/>
+			<!-- todo: ribbon for currently selected page -->
+		</Style>
+	</Window.Styles>
 	<SplitView IsPaneOpen="True" DisplayMode="Inline" OpenPaneLength="300">
 
 		<!-- Left: Sidebar Navigation -->
 		<SplitView.Pane>
 			<ScrollViewer>
-				<StackPanel>
-					<TextBlock Name="WelcomeText" Text="Unknown User" />
-					<Button Content="Manage User" Click="ShowUserView"/>
-					<Button Content="Encryption" Click="ShowEncryptionView"/>
-					<Button Content="Keys" Click="ShowKeysView"/>
+				<StackPanel HorizontalAlignment="Stretch">
+					<TextBlock Name="WelcomeText" Text="Unknown User" TextAlignment="Center"/>
+					<Button Content="Manage User"
+							Command="{Binding ShowUserView}"
+							Classes="sidebar"
+							Tag="User"/>
+					<Button Content="Encrypt/Decrypt"
+							Command="{Binding ShowEncryptionView}"
+							Classes="sidebar"
+							Tag="EncDec"/>
+					<Button Content="Keyring"
+							Command="{Binding ShowKeysView}"
+							Classes="sidebar"
+							Tag="Keys"/>
 				</StackPanel>
 			</ScrollViewer>
 		</SplitView.Pane>
@@ -24,7 +43,6 @@
 		<ScrollViewer>
 			<ContentControl Content="{Binding SelectedView}" />
 		</ScrollViewer>
-	</SplitView>
-	
-	
+	</SplitView>	
 </Window>
+
