@@ -5,12 +5,12 @@
         mc:Ignorable="d"
         x:Class="_4080capstone.Views.KeysDirectoryView">
 	<StackPanel>
-
 		<TextBlock HorizontalAlignment="Center" FontSize="24" FontWeight="Bold" Margin="10">Keyring</TextBlock>
-		<DataGrid Margin="20 0 20 20" ItemsSource="{Binding PgpKeys}"
-			  AutoGenerateColumns="False" IsReadOnly="True"
-			  GridLinesVisibility="All"
-			  BorderThickness="1" BorderBrush="Gray">
+		<DataGrid Name="KeyringTable" Margin="20 0 20 20" ItemsSource="{Binding PgpKeys}"
+				AutoGenerateColumns="False" IsReadOnly="True"
+				GridLinesVisibility="All"
+				BorderThickness="1" BorderBrush="Gray"
+				SelectionMode="Single">
 			<DataGrid.Columns>
 				<DataGridTextColumn Header="Identity" Width="*" Binding="{Binding UserIdentity}" />
 				<DataGridTextColumn Header="Type" Width="*" Binding="{Binding KeyType}" />
@@ -21,9 +21,7 @@
 
 			<DataGrid.ContextMenu>
 				<ContextMenu>
-					<MenuItem Header="Export key"/>
-					<!--Command="{Binding DataContext.YourCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
-								  CommandParameter="{Binding}" -->
+					<MenuItem Header="Export key" Click="btnExportKey_Click"/>
 				</ContextMenu>
 			</DataGrid.ContextMenu>
 		</DataGrid>

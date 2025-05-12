@@ -11,7 +11,7 @@
 		Padding="25">
 
 	<StackPanel>
-		<TextBlock Margin="10">Enter an identity and a password (optional) to sign the certificate.</TextBlock>
+		<TextBlock Margin="10">Enter an identity and a password to sign the certificate.</TextBlock>
 		<Separator></Separator>
 		
 		<Label>Name or Email Address</Label>

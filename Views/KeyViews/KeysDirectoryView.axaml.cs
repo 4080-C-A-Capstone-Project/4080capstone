@@ -7,6 +7,8 @@ using Avalonia.Markup.Xaml;
 using MsBox.Avalonia.Enums;
 using MsBox.Avalonia;
 using Avalonia.Platform.Storage;
+using MsBox.Avalonia.Base;
+using System.Diagnostics;
 
 namespace _4080capstone.Views;
 
@@ -59,6 +61,51 @@ public partial class KeysDirectoryView : UserControl
                 var result = await box.ShowWindowDialogAsync(TopLevel.GetTopLevel(this) as Window);
                 return;
             }
+        }
+    }
+
+    private async void btnExportKey_Click(object? sender, RoutedEventArgs e)
+    {
+        if ((PgpKeyInfo)KeyringTable.SelectedItem is var selectedKey)
+        {
+            IMsBox<ButtonResult> box;
+            ButtonResult result;
+
+            var topLevel = TopLevel.GetTopLevel(this);
+            try
+            {
+                string originalName = Path.GetFileName(selectedKey.Path);
+                string originalNameNoExt = Path.GetFileNameWithoutExtension(selectedKey.Path);
+                var file = await topLevel.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+                {
+                    Title = "Export As",
+                    SuggestedFileName = originalNameNoExt,
+                    FileTypeChoices = new[]
+                    {
+                        new FilePickerFileType("OpenPGP Text File") { Patterns = new[] { $"*asc" } }
+                    }
+                });
+
+                if (file == null)
+                {
+                    box = MessageBoxManager
+                        .GetMessageBoxStandard("", "Encryption cancelled.",
+                            ButtonEnum.Ok);
+                    await box.ShowWindowDialogAsync(TopLevel.GetTopLevel(this) as Window);
+                    return;
+                }
+                File.Copy(selectedKey.Path, file.TryGetLocalPath() + ".asc");
+            }
+            catch (Exception ex)
+            {
+                box = MessageBoxManager
+                          .GetMessageBoxStandard("Export Error", $"Error: {ex.Message}", ButtonEnum.Ok);
+                result = await box.ShowWindowDialogAsync(TopLevel.GetTopLevel(this) as Window);
+                return;
+            }
+            box = MessageBoxManager
+                      .GetMessageBoxStandard("Success", "Key exported successfully.", ButtonEnum.Ok);
+            result = await box.ShowWindowDialogAsync(TopLevel.GetTopLevel(this) as Window);
         }
     }
 
