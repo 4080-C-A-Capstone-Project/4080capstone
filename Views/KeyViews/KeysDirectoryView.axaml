@@ -11,11 +11,10 @@
 			  GridLinesVisibility="All"
 			  BorderThickness="1" BorderBrush="Gray">
 				<DataGrid.Columns>
-					<DataGridTextColumn Header="Identity" Width="*" Binding="{Binding Identity}" />
+					<DataGridTextColumn Header="Identity" Width="*" Binding="{Binding UserIdentity}" />
 					<DataGridTextColumn Header="Type" Width="*" Binding="{Binding KeyType}" />
 					<DataGridTextColumn Header="Validity" Width="*" Binding="{Binding Validity}" />
 					<DataGridTextColumn Header="Created" Width="*" Binding="{Binding CreationDate}" />
-					<!--<DataGridTextColumn Header="Expires" Width="*" Binding="{Binding ExpirationDate}" />-->
 					<DataGridTextColumn Header="Key ID" Width="*" Binding="{Binding KeyId}" />
 				</DataGrid.Columns>
 		</DataGrid>

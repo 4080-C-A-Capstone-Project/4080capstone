@@ -28,21 +28,34 @@ public partial class KeyCreationWindow : Window
         return _tcs.Task;
     }
 
-
     private async void OKButton_Click(object? sender, RoutedEventArgs e)
     {
-        try
+        if (string.IsNullOrWhiteSpace(Passphrase.Text) || string.IsNullOrWhiteSpace(Identity.Text))
         {
-            KeyGenerator.GenerateKeyPair(Identity.Text, Passphrase.Text);
-            _tcs?.TrySetResult(true);
-        } catch (Exception ex) {
             box = MessageBoxManager
-                  .GetMessageBoxStandard("Error", $"Encryption error: {ex.Message}",
+                  .GetMessageBoxStandard("Error", $"Please enter an identifier and password.",
                             ButtonEnum.Ok);
             await box.ShowWindowDialogAsync(TopLevel.GetTopLevel(this) as Window);
             _tcs?.TrySetResult(false);
-            Close();
-        }   
+            return;
+        } else {
+            try
+            {
+                KeyGenerator.GenerateKeyPair(Identity.Text, Passphrase.Text);
+                _tcs?.TrySetResult(true);
+            }
+            catch (Exception ex)
+            {
+                box = MessageBoxManager
+                      .GetMessageBoxStandard("Error", $"Encryption error: {ex.Message}",
+                                ButtonEnum.Ok);
+                await box.ShowWindowDialogAsync(TopLevel.GetTopLevel(this) as Window);
+                _tcs?.TrySetResult(false);
+                Close();
+            }
+        }
+
+            
     }
 
     private void CancelButton_Click(object? sender, RoutedEventArgs e)

@@ -10,6 +10,7 @@ using MsBox.Avalonia.Enums;
 using MsBox.Avalonia;
 using System.Text;
 using _4080capstone.Models;
+using _4080capstone.ViewModels;
 
 namespace _4080capstone.Views;
 
@@ -21,6 +22,21 @@ public partial class DecryptionControl : UserControl
     {
         InitializeComponent();
         decryptionMethod.ItemsSource = appState.EncryptionOptions;
+        decryptionMethod.SelectionChanged += DecryptionMethod_SelectionChanged;
+        DecryptionMethod_SelectionChanged(null, null);
+
+        // keys
+        DataContext = new KeyRingViewModel();
+    }
+
+    private void DecryptionMethod_SelectionChanged(object? sender, EventArgs? e)
+    {
+        bool pgpSelected = (decryptionMethod.SelectedItem.Equals("OpenPGP"));
+        if (pgpSelected)
+            SavedDecryptionKeys.SelectedIndex = 0;
+        SavedDecryptionKeys.IsVisible = pgpSelected;
+        privateKeyPassword.IsVisible = pgpSelected;
+        txtDecryptKey.IsVisible = !pgpSelected;
     }
 
     private async void btnBrowseDecryptFile_Click(object? sender, RoutedEventArgs e)
@@ -56,7 +72,7 @@ public partial class DecryptionControl : UserControl
 
             string? method = decryptionMethod.SelectedItem?.ToString();
             string? userEnteredKey = txtDecryptKey.Text?.Trim();
-            if (string.IsNullOrWhiteSpace(userEnteredKey))
+            if (decryptionMethod.SelectedItem != "OpenPGP" && string.IsNullOrWhiteSpace(userEnteredKey))
             {
                 box = MessageBoxManager
                   .GetMessageBoxStandard("Input Error", "Please enter the decryption key.",
@@ -72,7 +88,8 @@ public partial class DecryptionControl : UserControl
             // ✅ Check if extension matches selected method
             bool extMatch = (method == "Caesar" && extension == ".cip") ||
                             (method == "XOR" && extension == ".xor") ||
-                            (method == "AES" && extension == ".aes");
+                            (method == "AES" && extension == ".aes") ||
+                            (method == "OpenPGP" && extension == ".pgp");
 
             if (!extMatch)
             {
@@ -128,10 +145,16 @@ public partial class DecryptionControl : UserControl
                 byte[] encryptedSection = allBytes[(secondNewline + 1)..];
                 string base64 = Encoding.UTF8.GetString(encryptedSection).Trim();
                 byte[] encryptedBytes = Convert.FromBase64String(base64);
-                byte[] decryptedBytes = SymmetricEncryption.AESDecryptBytes(encryptedBytes, userEnteredKey);
+                byte[] decryptedBytes = Encryption.AESDecryptBytes(encryptedBytes, userEnteredKey);
 
                 fullPath = Path.Combine(fullSaveDir, $"{chosenFileName}{originalExt}");
                 File.WriteAllBytes(fullPath, decryptedBytes);
+            } else if (method == "OpenPGP")
+            {
+                PgpKeyInfo keyInfo = (PgpKeyInfo)SavedDecryptionKeys.SelectedItem;
+                string privateKey = File.ReadAllText(keyInfo.Path);
+                fullPath = Path.Combine(fullSaveDir, $"{chosenFileName}");
+                Encryption.PGPDecryptFile(filePath, fullPath, privateKey, privateKeyPassword.Text);
             }
             else
             {
@@ -155,8 +178,8 @@ public partial class DecryptionControl : UserControl
 
                 string output = method switch
                 {
-                    "Caesar" => SymmetricEncryption.CaesarDecrypt(encryptedText, int.Parse(userEnteredKey)),
-                    "XOR" => SymmetricEncryption.XorDecrypt(encryptedText, (char)(int.Parse(userEnteredKey) % 256)),
+                    "Caesar" => Encryption.CaesarDecrypt(encryptedText, int.Parse(userEnteredKey)),
+                    "XOR" => Encryption.XorDecrypt(encryptedText, (char)(int.Parse(userEnteredKey) % 256)),
                     _ => throw new Exception("Unknown method.")
                 };
                 fullPath = Path.Combine(fullSaveDir, $"{chosenFileName}{originalExt}");

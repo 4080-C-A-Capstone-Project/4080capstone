@@ -5,7 +5,7 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="_4080capstone.Views.EncryptionControl">
 	<StackPanel>
-		<TextBlock>Select input type</TextBlock>
+		<TextBlock>Input type</TextBlock>
 		<RadioButton GroupName="inputType" Name="rbText" IsChecked="True" Content="Text"/>
 		<RadioButton GroupName="inputType" Name="rbFile" Content="File"/>
 
@@ -20,12 +20,16 @@
 		<ComboBox Name="encryptionMethod" SelectedIndex="0">
 		</ComboBox>
 
+		<!-- openpgp -->
 		<Label Name="lblKeyInput">Encryption Key</Label>
-		<ComboBox Name="SavedEncryptionKeys" SelectedIndex="0">
-			
+		<ComboBox Name="SavedEncryptionKeys"
+				  ItemsSource="{Binding PublicPgpKeys}"
+				  DisplayMemberBinding="{Binding DisplayName}"
+				  SelectedIndex="0">
 		</ComboBox>
 
-		<TextBlock>Generated Key</TextBlock>
+		<!-- symmetric -->
+		<TextBlock Name="lblGeneratedKey">Generated Key</TextBlock>
 		<TextBox IsReadOnly="True" Name="txtKey"></TextBox>
 
 		<Button Click="btnEncrypt_Click">Encrypt Input</Button>

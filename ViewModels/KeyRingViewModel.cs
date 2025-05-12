@@ -6,42 +6,79 @@ using System.Text;
 using System.Threading.Tasks;
 using Org.BouncyCastle.Bcpg.OpenPgp;
 using Org.BouncyCastle.Utilities.IO;
-using _4080capstone.Services;
 using _4080capstone.Models;
 using System.Diagnostics;
+using DynamicData;
 
 namespace _4080capstone.ViewModels
 {
     public class KeyRingViewModel
     {
-        public static ObservableCollection<PgpKeyInfo> PgpKeys { get; } = new ObservableCollection<PgpKeyInfo>();
-        
+        public static ObservableCollection<PgpKeyInfo> PgpKeys { get; private set;  } = new ObservableCollection<PgpKeyInfo>();
+        public static ObservableCollection<PgpKeyInfo> PrivatePgpKeys { get; private set; } = new ObservableCollection<PgpKeyInfo>();
+        public static ObservableCollection<PgpKeyInfo> PublicPgpKeys { get; private set; } = new ObservableCollection<PgpKeyInfo>();
+
         public KeyRingViewModel() { }
 
         public static void InitializeKeyCollection()
         {
-            var keyFiles = Directory.GetFiles("keys", "*.asc");
-            foreach (var file in keyFiles)
+            if (PgpKeys.Count == 0)
             {
-                try { ParseAndAddKey(file); }
-                catch (Exception ex) { Console.WriteLine($"Failed to parse {file}: {ex.Message}"); }
+                var keyFiles = Directory.GetFiles("keys", "*.asc");
+                foreach (var file in keyFiles)
+                {
+                    try { ParseAndAddKey(file); }
+                    catch (Exception ex) { Console.WriteLine($"Failed to parse {file}: {ex.Message}"); }
+                }
+                SortPgpKeys(PgpKeys);
             }
+        }
+
+        public static void RefreshCollection() {
+            PgpKeys.Clear();
+            InitializeKeyCollection();
         }
 
         // 1. user's private keys (prove authorship/read stuff meant for you)
         // 2. user's public keys (encrypted to keep to yourself)
         // 3. others' public keys (verify authenticity of other person's message)
         // 4. others' private keys (you're not really supposed to have these...)
-        protected static void SortPgpKeys()
+        protected static void SortPgpKeys(ObservableCollection<PgpKeyInfo> coll)
         {
-
+            var myPrivKeys = coll.Where(key =>
+                            key.UserIdentity.Equals(AppState.Instance.CurrentUsername.ToString(),
+                            StringComparison.OrdinalIgnoreCase) && key.KeyType.Equals("Private")).ToList();
+            var myPubKeys = coll.Where(key =>
+                            key.UserIdentity.Equals(AppState.Instance.CurrentUsername.ToString(),
+                            StringComparison.OrdinalIgnoreCase) && key.KeyType.Equals("Public")).ToList();
+            var theirPubKeys = coll.Where(key =>
+                            !key.UserIdentity.Equals(AppState.Instance.CurrentUsername.ToString(),
+                            StringComparison.OrdinalIgnoreCase) && key.KeyType.Equals("Public")).ToList();
+            var theirPrivKeys = coll.Where(key =>
+                            !key.UserIdentity.Equals(AppState.Instance.CurrentUsername.ToString(),
+                            StringComparison.OrdinalIgnoreCase) && key.KeyType.Equals("Private")).ToList();
+            coll.Clear();
+            coll.AddRange((myPrivKeys.Concat(myPubKeys).Concat(theirPubKeys).Concat(theirPrivKeys)).ToList());
         }
 
         public static void ParseAndAddKey(string path)
         {
             var newKey = ParseKey(path);
-            if (CanAddKey(path))
-                PgpKeys.Add(newKey);
+            if (!CanAddKey(path))
+                return;
+
+            PgpKeys.Add(newKey);
+            SortPgpKeys(PgpKeys);
+
+            if (newKey.KeyType == "Private")
+            {
+                PrivatePgpKeys.Add(newKey);
+                SortPgpKeys(PrivatePgpKeys);
+            }
+            else {
+                PublicPgpKeys.Add(newKey);
+                SortPgpKeys(PublicPgpKeys);
+            }
         }
 
         public static bool CanAddKey(string path)
@@ -53,7 +90,6 @@ namespace _4080capstone.ViewModels
 
         protected static PgpKeyInfo? ParseKey(string path)
         {
-            // First try to read as public key
             try
             {
                 var keyContent = File.ReadAllText(path);
@@ -74,16 +110,18 @@ namespace _4080capstone.ViewModels
                             var expiration = pubKey.GetValidSeconds() == 0
                                 ? DateTime.MaxValue
                                 : pubKey.CreationTime.AddSeconds(pubKey.GetValidSeconds());
-                            return new PgpKeyInfo
+                            var parsedKey = new PgpKeyInfo
                             {
                                 KeyType = "Private",
-                                Identity = userId,
+                                UserIdentity = userId,
                                 Validity = pubKey.IsRevoked() ? "Revoked" : "Valid",
                                 CreationDate = pubKey.CreationTime,
                                 ExpirationDate = expiration,
-                                KeyId = pubKey.KeyId.ToString("X"),
+                                KeyId = key.KeyId.ToString("X"),
                                 Path = path
                             };
+                            parsedKey.DisplayName = $"{parsedKey.UserIdentity} ({parsedKey.Validity}, {parsedKey.CreationDate})";
+                            return parsedKey;
                         }
                     }
                 }
@@ -103,16 +141,18 @@ namespace _4080capstone.ViewModels
                                 ? DateTime.MaxValue
                                 : key.CreationTime.AddSeconds(key.GetValidSeconds());
 
-                            return new PgpKeyInfo
+                            var parsedKey = new PgpKeyInfo
                             {
                                 KeyType = "Public",
-                                Identity = userId,
+                                UserIdentity = userId,
                                 Validity = key.IsRevoked() ? "Revoked" : "Valid",
                                 CreationDate = key.CreationTime,
                                 ExpirationDate = expiration,
                                 KeyId = key.KeyId.ToString("X"),
                                 Path = path
                             };
+                            parsedKey.DisplayName = $"{parsedKey.UserIdentity} ({parsedKey.Validity}, {parsedKey.CreationDate})";
+                            return parsedKey;
                         }
                     }
                 } 

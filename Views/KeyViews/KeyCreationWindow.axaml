@@ -16,7 +16,7 @@
 		
 		<Label>Name or Email Address</Label>
 		<TextBox Name="Identity"></TextBox>
-		<Label>Password (Optional)</Label>
+		<Label>Passphrase</Label>
 		<TextBox Name="Passphrase"></TextBox>
 
 		<!--<Label Margin="0 10 0 0">Valid for</Label>

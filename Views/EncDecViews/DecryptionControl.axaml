@@ -15,7 +15,12 @@
 
 		
 		<Label>Decryption Key</Label>
-		<ComboBox Name="SavedDecryptionKeys" SelectedIndex="0"></ComboBox>
+		<ComboBox Name="SavedDecryptionKeys"
+				  ItemsSource="{Binding PrivatePgpKeys}"
+				  DisplayMemberBinding="{Binding DisplayName}"
+				  SelectedIndex="0">
+		</ComboBox>
+		<TextBox Name="privateKeyPassword" Watermark="Private Key Password"></TextBox>
 		<TextBox Name="txtDecryptKey"></TextBox>
 		<Button Click="btnDecrypt_Click">Decrypt</Button>
 	</StackPanel>

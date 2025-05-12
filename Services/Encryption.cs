@@ -1,3 +1,9 @@
+using Avalonia.Controls;
+using MsBox.Avalonia.Enums;
+using MsBox.Avalonia;
+using Org.BouncyCastle.Security;
+using PgpCore;
+using PgpCore.Abstractions;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -6,7 +12,7 @@ using System.Text;
 
 namespace _4080capstone.Services
 {
-    public static class SymmetricEncryption
+    public static class Encryption
     {
         public static string CaesarEncrypt(string text, int shift = 3)
         {
@@ -84,7 +90,60 @@ namespace _4080capstone.Services
             return ms.ToArray();
         }
 
+        public async static Task<string> PGPEncryptText(string text, string key)
+        {
+            // string publicKey = File.ReadAllText(@"C:\TEMP\Keys\public.asc");
+            string encKey = key; // usually the other party's public key
+            EncryptionKeys encryptionKeys = new EncryptionKeys(encKey); // For now, only one recipient
+
+            PGP pgp = new PGP(encryptionKeys);
+            string encryptedContent = await pgp.EncryptAsync(text);
+
+            return encryptedContent;
+        }
+
+        public async static void PGPEncryptFileStream(string inputPath, string outputPath, string key)
+        {
+            EncryptionKeys encryptionKeys = new EncryptionKeys(key);
+            PGP pgp = new PGP(encryptionKeys);
+
+            // Reference input/output files
+            using (FileStream inputFileStream = new FileStream(inputPath, FileMode.Open))
+            using (Stream outputFileStream = File.Create(outputPath))
+            {
+                await pgp.EncryptAsync(inputFileStream, outputFileStream);
+                inputFileStream.Close();
+                outputFileStream.Close();
+            }
+        }
+
+        public async static Task<string> PGPDecryptText(string text, string key, string? password = null)
+        {
+            EncryptionKeys encryptionKeys;
+
+            if (string.IsNullOrWhiteSpace(password)) 
+                encryptionKeys = new EncryptionKeys(key);
+            else
+                encryptionKeys = new EncryptionKeys(key, password);
+
+            PGP pgp = new PGP(encryptionKeys);
+
+            // Decrypt
+            string decryptedContent = await pgp.DecryptAsync(text);
+            return decryptedContent;
+        }
+
+        public async static Task PGPDecryptFile(string inputPath, string outputPath, string key, string? password = null)
+        {
+            EncryptionKeys encryptionKeys = new EncryptionKeys(key, password);
+
+            // Reference input/output files
+            FileInfo inputFile = new FileInfo(inputPath);
+            FileInfo decryptedFile = new FileInfo(outputPath);
+
+            // Decrypt
+            PGP pgp = new PGP(encryptionKeys);
+            await pgp.DecryptAsync(inputFile, decryptedFile);
+        }
     }
-
-
 }

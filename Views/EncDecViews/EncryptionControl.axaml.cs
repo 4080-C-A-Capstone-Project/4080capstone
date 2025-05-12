@@ -9,6 +9,8 @@ using MsBox.Avalonia.Enums;
 using MsBox.Avalonia;
 using System.Text;
 using _4080capstone.Models;
+using System.Diagnostics;
+using _4080capstone.ViewModels;
 
 namespace _4080capstone.Views;
 
@@ -19,11 +21,30 @@ public partial class EncryptionControl : UserControl
     public EncryptionControl()
     {
         InitializeComponent();
+
         encryptionMethod.ItemsSource = appState.EncryptionOptions;
         rbText.IsCheckedChanged += RbInputType_CheckedChanged;
         rbFile.IsCheckedChanged += RbInputType_CheckedChanged;
         RbInputType_CheckedChanged(null, null);
-        //encryptionMethod.SelectionChanged +=
+
+        encryptionMethod.SelectionChanged += EncryptionMethod_SelectionChanged;
+        EncryptionMethod_SelectionChanged(null, null);
+
+        // keys
+        DataContext = new KeyRingViewModel();
+    }
+
+    private void EncryptionMethod_SelectionChanged(object? sender, EventArgs? e)
+    {
+        bool pgpSelected = (encryptionMethod.SelectedItem.Equals("OpenPGP"));
+        if (pgpSelected)
+            SavedEncryptionKeys.SelectedIndex = 0;
+
+        lblKeyInput.IsVisible = pgpSelected;
+        SavedEncryptionKeys.IsVisible = pgpSelected;
+
+        lblGeneratedKey.IsVisible = !pgpSelected;
+        txtKey.IsVisible = !pgpSelected;
     }
 
     private void RbInputType_CheckedChanged(object? sender, EventArgs? e)
@@ -91,6 +112,7 @@ public partial class EncryptionControl : UserControl
                 "Caesar" => ".cip",
                 "XOR" => ".xor",
                 "AES" => ".aes",
+                "OpenPGP" => ".pgp",
                 _ => ".enc"
             };
 
@@ -149,7 +171,7 @@ public partial class EncryptionControl : UserControl
                     }
                     // else throw new Exception("Please select input type.");
 
-                    output = SymmetricEncryption.CaesarEncrypt(input, int.Parse(keyToUse));
+                    output = Encryption.CaesarEncrypt(input, int.Parse(keyToUse));
                     File.WriteAllText(fullPath, $"{method}\n{originalExt}\n{output}");
                     break;
 
@@ -166,7 +188,7 @@ public partial class EncryptionControl : UserControl
                     }
                     // else throw new Exception("Please select input type.");
 
-                    output = SymmetricEncryption.XorEncrypt(input, (char)(int.Parse(keyToUse) % 256));
+                    output = Encryption.XorEncrypt(input, (char)(int.Parse(keyToUse) % 256));
                     File.WriteAllText(fullPath, $"{method}\n{originalExt}\n{output}");
                     break;
 
@@ -176,13 +198,13 @@ public partial class EncryptionControl : UserControl
 
                     if (!isFileInput) // text input
                     {
-                        output = SymmetricEncryption.AESEncrypt(input, keyToUse);
+                        output = Encryption.AESEncrypt(input, keyToUse);
                         File.WriteAllText(fullPath, $"{method}\n{originalExt}\n{output}");
                     }
                     else if (isFileInput)
                     {
                         byte[] rawBytes = File.ReadAllBytes(txtFilePath.Text);
-                        byte[] encryptedBytes = SymmetricEncryption.AESEncryptBytes(rawBytes, keyToUse);
+                        byte[] encryptedBytes = Encryption.AESEncryptBytes(rawBytes, keyToUse);
 
                         using var fs = new FileStream(fullPath, FileMode.Create);
                         using var writer = new BinaryWriter(fs);
@@ -191,19 +213,32 @@ public partial class EncryptionControl : UserControl
                     }
                     // else throw new Exception("Please select input type.");
                     break;
+                case "OpenPGP":
+                    PgpKeyInfo keyInfo = (PgpKeyInfo)SavedEncryptionKeys.SelectedItem;
+                    string publicKey = File.ReadAllText(keyInfo.Path);
+                    if (!isFileInput)
+                    {
+                        output = await Encryption.PGPEncryptText(input, publicKey);
+                        File.WriteAllText(fullPath, $"{method}\n{originalExt}\n{output}");
+                    }
+                    else if (isFileInput)
+                    {
+                        Encryption.PGPEncryptFileStream(txtFilePath.Text, fullPath, publicKey);
+                    }
+                    break;
             }
-
-            box = MessageBoxManager
-                  .GetMessageBoxStandard("Success", $"Encrypted file saved successfully as '{file.Name}'",
-                            ButtonEnum.Ok);
-            await box.ShowWindowDialogAsync(TopLevel.GetTopLevel(this) as Window);
         }
         catch (Exception ex)
         {
             box = MessageBoxManager
-                  .GetMessageBoxStandard("Error", $"Encryption error: {ex.Message}",
-                            ButtonEnum.Ok);
+                .GetMessageBoxStandard("Error", $"Encryption error: {ex.Message}",
+                        ButtonEnum.Ok);
             await box.ShowWindowDialogAsync(TopLevel.GetTopLevel(this) as Window);
+            return;
         }
+        box = MessageBoxManager
+              .GetMessageBoxStandard("Success", $"Encrypted file saved successfully.",
+                        ButtonEnum.Ok);
+        await box.ShowWindowDialogAsync(TopLevel.GetTopLevel(this) as Window);
     }
 }
