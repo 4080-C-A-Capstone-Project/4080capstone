@@ -5,6 +5,7 @@ using PgpCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -45,6 +46,25 @@ namespace _4080capstone.Services
             KeyRingViewModel.ParseAndAddKey($"keys/{filename.Replace(".asc", "_private.asc")}");
         }
 
+        public static void GenerateKeys()
+        {
+            AppState appState = AppState.Instance;
+            if (!string.IsNullOrWhiteSpace(appState.CurrentUsername.ToString()))
+            {
+                appState.userKeys.Clear(); // reset
+
+                string caesarKey = KeyGenerator.GenerateNumericKey(4);
+                string xorKey = KeyGenerator.GenerateNumericKey(4);
+                string aesUserKey = KeyGenerator.GenerateAlphaNumKey(8);
+                appState.userKeys["Caesar"] = caesarKey;
+                appState.userKeys["XOR"] = xorKey;
+                appState.userKeys["AES"] = aesUserKey;
+                var lines = appState.userKeys.Select(kvp => $"{appState.CurrentUsername} - {kvp.Key} - {kvp.Value}");
+                File.WriteAllLines("keys.aes", lines);
+
+                appState.UpdateKeyCollection();
+            }
+        }
         public static string GenerateNumericKey(int digits)
         {
             var rnd = new Random();

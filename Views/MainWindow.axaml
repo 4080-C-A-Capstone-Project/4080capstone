@@ -7,42 +7,54 @@
 		xmlns:local="clr-namespace:_4080capstone.Views"
 		xmlns:interactivity="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
 		xmlns:interactions="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
+		WindowStartupLocation="CenterOwner"
+		MinHeight="450"
+		MinWidth="800"
         Title="Crypt#">
 	<Window.Styles>
-		<!-- Sidebar Buttons -->
-		<Style Selector="Button.sidebar">
-			<Setter Property="HorizontalAlignment" Value="Stretch"/>
-			<Setter Property="Padding" Value="30 10"/>
-			<Setter Property="FontSize" Value="17"/>
-			<!-- todo: ribbon for currently selected page -->
-		</Style>
 	</Window.Styles>
-	<SplitView IsPaneOpen="True" DisplayMode="Inline" OpenPaneLength="300">
 
-		<!-- Left: Sidebar Navigation -->
-		<SplitView.Pane>
-			<ScrollViewer>
-				<StackPanel HorizontalAlignment="Stretch">
-					<TextBlock Name="WelcomeText" Text="Unknown User" TextAlignment="Center"/>
-					<Button Content="Manage User"
-							Command="{Binding ShowUserView}"
-							Classes="sidebar"
-							Tag="User"/>
-					<Button Content="Encrypt/Decrypt"
-							Command="{Binding ShowEncryptionView}"
-							Classes="sidebar"
-							Tag="EncDec"/>
-					<Button Content="Keyring"
-							Command="{Binding ShowKeysView}"
-							Classes="sidebar"
-							Tag="Keys"/>
+	<Grid ColumnDefinitions="1*, 2.5*" RowDefinitions="*">
+			<Border VerticalAlignment="Stretch" Grid.Row="0" Grid.RowSpan="1">
+				<Grid Classes="sidebar" RowDefinitions="Auto, Auto, Auto, Auto,*" >					
+					<TextBlock Classes="sidebar"
+								Grid.Row="0"
+							    FontSize="20"
+							    Margin="0 20 0 0"
+							    FontWeight="Bold"
+								Name="WelcomeText" 
+								Text="Unknown User" 
+								TextAlignment="Center"/>
+					<Button
+						Grid.Row="1"
+						Content="Manage User"
+						Command="{Binding ShowUserView}"
+						Classes="sidebar"
+						Tag="User"/>
+					<Button Grid.Row="2"
+						Content="Encrypt/Decrypt"
+						Command="{Binding ShowEncryptionView}"
+						Classes="sidebar"
+						Tag="EncDec"/>
+					<Button Grid.Row="3"
+						Content="Keyring"
+						Command="{Binding ShowKeysView}"
+						Classes="sidebar"
+						Tag="Keys"/>
+				</Grid>
+			</Border>
+
+		<ScrollViewer
+			Grid.Column="1"
+			HorizontalAlignment="Stretch">
+				<StackPanel>
+					<DockPanel Classes="HeaderBar" HorizontalAlignment="Stretch" Height="10"></DockPanel>
+					<Border Padding="20">
+						<ContentControl
+							HorizontalAlignment="Stretch" Content="{Binding SelectedView}" />
+					</Border>
 				</StackPanel>
-			</ScrollViewer>
-		</SplitView.Pane>
-
-		<ScrollViewer>
-			<ContentControl Content="{Binding SelectedView}" />
 		</ScrollViewer>
-	</SplitView>	
+	</Grid>
 </Window>
 

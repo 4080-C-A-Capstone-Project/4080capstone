@@ -12,8 +12,7 @@
 	<StackPanel VerticalAlignment="Center" >
 		<Label>Enter username</Label>
 		<TextBox Name="UsernameInput" Margin="0 5 0 10"></TextBox>
-		<!-- if invalid... color button green -->
-		<Button HorizontalAlignment="Right" Name="SetUsernameBtn" Click="SetUsernameBtn_Click">Set Username</Button>
+		<Button HorizontalAlignment="Right" Name="SetUsernameBtn" Classes="purpleBtn" Click="SetUsernameBtn_Click">Set Username</Button>
 		<!-- cancel button? -->
 	</StackPanel>
 </Window>

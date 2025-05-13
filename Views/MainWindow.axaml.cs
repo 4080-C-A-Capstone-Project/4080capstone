@@ -11,6 +11,7 @@ using _4080capstone.Services;
 using _4080capstone.Models;
 using _4080capstone.ViewModels;
 using System.ComponentModel;
+using Avalonia;
 
 namespace _4080capstone.Views;
 
@@ -18,6 +19,8 @@ public partial class MainWindow : Window
 {
     private readonly AppState appState = AppState.Instance;
     private MainWindowViewModel ViewModel => (MainWindowViewModel)DataContext;
+    private double _aspectRatio = 8.0/5.0;
+    private bool _isAdjustingSize = false;
 
     public MainWindow()
     {
@@ -31,15 +34,18 @@ public partial class MainWindow : Window
     private void ShowUserView(object sender, RoutedEventArgs e) => ViewModel.ShowUserView();
     private void ShowEncryptionView(object sender, RoutedEventArgs e) => ViewModel.ShowEncryptionView();
     private void ShowKeysView(object sender, RoutedEventArgs e) => ViewModel.ShowKeysView();
-
     private void OnUsernameChange(object? sender, PropertyChangedEventArgs e) => UpdateWelcomeText();
-    private void UpdateWelcomeText() => WelcomeText.Text = $"Welcome, {AppState.Instance.CurrentUsername}!";
+    private void UpdateWelcomeText() {
+        WelcomeText.Text = $"Welcome, {AppState.Instance.CurrentUsername}!";
+        WelcomeText.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center;
+    }
 
     private void LoadLastUserFromFile()
     {
         string path = "keys.aes";
         if (!File.Exists(path))
             return;
+            
 
         var lines = File.ReadAllLines(path);
         if (lines.Length == 0)
@@ -53,7 +59,7 @@ public partial class MainWindow : Window
         foreach (var line in lines)
         {
             var parts = line.Split(" - ");
-            if (parts.Length == 3 && parts[0] == appState.CurrentUsername)
+            if (parts.Length == 3 && parts[0].Equals(appState.CurrentUsername))
             {
                 string method = parts[1].Trim();
                 string key = parts[2].Trim();
@@ -61,6 +67,7 @@ public partial class MainWindow : Window
             }
         }
 
+        appState.UpdateKeyCollection();
         UpdateWelcomeText();
     }
 

@@ -6,9 +6,28 @@
         x:Class="_4080capstone.Views.UserSettingsView">
     
     <StackPanel HorizontalAlignment="Center">
-        <Button Content="Set Username" Click="SetUsername_Click" Name="setUserBtn"></Button>
-		<TextBlock>
-			Display session keys here?
-		</TextBlock>
+		<TextBlock HorizontalAlignment="Stretch" FontSize="24" Margin="10">Manage User</TextBlock>
+		
+		<TextBlock HorizontalAlignment="Center" Text="{Binding SessionInfo}"/>
+        <Button Content="Set Username" HorizontalAlignment="Center" Click="SetUsername_Click" Name="setUserBtn" Classes="purpleBtn"></Button>
+		
+		<TextBlock HorizontalAlignment="Center" FontSize="16" Margin="10 20 10 10">Session Keys</TextBlock>
+		<Grid RowDefinitions="* 40">
+			<DataGrid Name="SessionKeyTable"
+					  Margin="20 0 20 20"
+					  ItemsSource="{Binding KeyEntries}"
+					  AutoGenerateColumns="False" IsReadOnly="True"
+					  GridLinesVisibility="All"
+					  BorderThickness="1" BorderBrush="Gray">
+				<DataGrid.Columns>
+					<DataGridTextColumn Header="Method" Width="*" Binding="{Binding Method}" />
+					<DataGridTextColumn Header="Key" Width="*" Binding="{Binding EncKey}" />
+				</DataGrid.Columns>
+			</DataGrid>
+
+			<Grid Grid.Row="1" Margin="20 0" ColumnDefinitions="1* 5 1*" HorizontalAlignment="Right">
+				<Button Grid.Column="2" Content="Refresh Keys" Padding="10 5" Classes="purpleBtn" Click="GenerateKeys"/>
+			</Grid>
+		</Grid>
     </StackPanel>
 </UserControl>

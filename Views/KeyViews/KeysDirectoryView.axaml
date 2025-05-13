@@ -3,34 +3,38 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
+		d:DesignWidth="700"
         x:Class="_4080capstone.Views.KeysDirectoryView">
 	<StackPanel>
-		<TextBlock HorizontalAlignment="Center" FontSize="24" FontWeight="Bold" Margin="10">Keyring</TextBlock>
-		<DataGrid Name="KeyringTable" Margin="20 0 20 20" ItemsSource="{Binding PgpKeys}"
-				AutoGenerateColumns="False" IsReadOnly="True"
-				GridLinesVisibility="All"
-				BorderThickness="1" BorderBrush="Gray"
-				SelectionMode="Single">
-			<DataGrid.Columns>
-				<DataGridTextColumn Header="Identity" Width="*" Binding="{Binding UserIdentity}" />
-				<DataGridTextColumn Header="Type" Width="*" Binding="{Binding KeyType}" />
-				<DataGridTextColumn Header="Validity" Width="*" Binding="{Binding Validity}" />
-				<DataGridTextColumn Header="Created" Width="*" Binding="{Binding CreationDateLocal}" />
-				<DataGridTextColumn Header="Key ID" Width="*" Binding="{Binding KeyId}" />
-			</DataGrid.Columns>
+		<TextBlock HorizontalAlignment="Center" FontSize="24" Margin="10">Keyring</TextBlock>
+		<Grid RowDefinitions="* 40">
+			<DataGrid Name="KeyringTable"
+					  Margin="20 0 20 20"
+					  ItemsSource="{Binding PgpKeys}"
+					  AutoGenerateColumns="False" IsReadOnly="True"
+					  GridLinesVisibility="All"
+					  BorderThickness="1" BorderBrush="Gray"
+					  SelectionMode="Single">
+				<DataGrid.Columns>
+					<DataGridTextColumn Header="Identity" Width="*" Binding="{Binding UserIdentity}" />
+					<DataGridTextColumn Header="Type" Width="*" Binding="{Binding KeyType}" />
+					<DataGridTextColumn Header="Validity" Width="*" Binding="{Binding Validity}" />
+					<DataGridTextColumn Header="Created" Width="*" Binding="{Binding CreationDateLocal}" />
+					<DataGridTextColumn Header="Key ID" Width="*" Binding="{Binding KeyId}" />
+				</DataGrid.Columns>
 
-			<DataGrid.ContextMenu>
-				<ContextMenu>
-					<MenuItem Header="Export key" Click="btnExportKey_Click"/>
-				</ContextMenu>
-			</DataGrid.ContextMenu>
-		</DataGrid>
+				<DataGrid.ContextMenu>
+					<ContextMenu>
+						<MenuItem Header="Export key" Click="btnExportKey_Click"/>
+					</ContextMenu>
+				</DataGrid.ContextMenu>
+			</DataGrid>
 
-		<Grid  Margin="20 0" ColumnDefinitions="1* 1*" HorizontalAlignment="Right">
-			<Button Grid.Column="0" Content="Import Key" Click="btnImportKey_Click"/>
-			<Button Grid.Column="1" Content="New OpenPGP Key Pair" Click="btnCreateKeyPair_Click"/>
+			<Grid Grid.Row="1" Margin="20 0" ColumnDefinitions="1* 5 1*" HorizontalAlignment="Right">
+				<Button Grid.Column="0" Content="Import Key" Padding="10 5" Click="btnImportKey_Click"/>
+				<Button Grid.Column="2" Content="New OpenPGP Key Pair" Padding="10 5" Classes="purpleBtn" Click="btnCreateKeyPair_Click"/>
+			</Grid>
 		</Grid>
-
 	</StackPanel>
 	<!-- table of keys -->
 	<!-- button to create key pair -->
