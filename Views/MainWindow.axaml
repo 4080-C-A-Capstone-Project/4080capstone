@@ -34,7 +34,7 @@
 							   TextWrapping="Wrap"/>
 					<Button
 						Grid.Row="2"
-						Content="Cryptography"
+						Content="Manage User"
 						Command="{Binding ShowUserView}"
 						Classes="sidebar"
 						Tag="User"/>
