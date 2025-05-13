@@ -12,6 +12,7 @@ using System.Text;
 using _4080capstone.Models;
 using _4080capstone.ViewModels;
 using Org.BouncyCastle.Bcpg.OpenPgp;
+using System.Diagnostics;
 
 namespace _4080capstone.Views;
 
@@ -154,13 +155,22 @@ public partial class DecryptionControl : UserControl
                     throw new Exception("Invalid AES file format.");
 
                 string methodRead = Encoding.UTF8.GetString(allBytes[..firstNewline]).Trim();
+                Debug.WriteLine(methodRead);
                 string originalExt = Encoding.UTF8.GetString(allBytes[(firstNewline + 1)..secondNewline]).Trim();
-
-                byte[] encryptedSection = allBytes[(secondNewline + 1)..];
-                string base64 = Encoding.UTF8.GetString(encryptedSection).Trim();
-                byte[] encryptedBytes = Convert.FromBase64String(base64);
-                byte[] decryptedBytes = Encryption.AESDecryptBytes(encryptedBytes, userEnteredKey);
-
+                byte[] encryptedBytes;
+                byte[] decryptedBytes;
+                try
+                {
+                    byte[] encryptedSection = allBytes[(secondNewline + 1)..];
+                    string base64 = Encoding.UTF8.GetString(encryptedSection).Trim();
+                    encryptedBytes = Convert.FromBase64String(base64);
+                    decryptedBytes = Encryption.AESDecryptBytes(encryptedBytes, userEnteredKey);
+                } catch (FormatException) { 
+                    encryptedBytes = allBytes[(secondNewline + 1)..];
+                    decryptedBytes = Encryption.AESDecryptBytes(encryptedBytes, userEnteredKey);
+                    fullPath = Path.Combine(fullSaveDir, $"{fileNameBase}{originalExt}");
+                    File.WriteAllBytes(fullPath, decryptedBytes);
+                }
                 fullPath = Path.Combine(fullSaveDir, $"{chosenFileName}{originalExt}");
                 File.WriteAllBytes(fullPath, decryptedBytes);
             } else if (method == "OpenPGP")
