@@ -13,7 +13,7 @@
               Margin="0,10,0,0"
               HorizontalAlignment="Right"
               ColumnDefinitions="1*,1*">
-			<Button Name="saveButton" Grid.Column="0" Click="SaveButton_Click">Save</Button>
+			<Button Name="saveButton" Classes="purpleBtn" Grid.Column="0" Click="SaveButton_Click">Save</Button>
 			<Button Name="cancelButton" Grid.Column="1" Click="CancelButton_Click">Cancel</Button>
 		</Grid>
 

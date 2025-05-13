@@ -13,6 +13,7 @@ public partial class UsernameSetWindow : Window
     public UsernameSetWindow()
     {
         InitializeComponent();
+        WindowStartupLocation = WindowStartupLocation.CenterOwner;
     }
 
     public Task<string?> ShowDialogAsync(Window parent, string savedInput = "")

@@ -4,26 +4,38 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="_4080capstone.Views.DecryptionControl">
-	<StackPanel>
-		<TextBlock>File to decrypt</TextBlock>
-		<TextBox IsReadOnly="True" Name="txtDecryptFilePath"></TextBox>
-		<Button Click="btnBrowseDecryptFile_Click">Browse</Button>
-
-		<TextBlock>Decryption Method</TextBlock>
-		<ComboBox Name="decryptionMethod" SelectedIndex="0">
+	<StackPanel Width="450">
+		<Label
+			Classes="SmallHeader">File to decrypt</Label>
+		
+		<Grid ColumnDefinitions="8*, .25*, 2*" HorizontalAlignment="Stretch">
+			<TextBox Grid.Column="0" Name="txtDecryptFilePath" Classes="ReadOnlyTextBox" IsReadOnly="true"></TextBox>
+			<Button Grid.Column="2" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Click="btnBrowseDecryptFile_Click">Browse</Button>
+		</Grid>
+		
+		
+		<Label
+			Classes="SmallHeader">Decryption Method</Label>
+		<ComboBox Name="decryptionMethod"
+				  SelectedIndex="0">
 		</ComboBox>
 
 		
-		<Label>Decryption Key</Label>
+		<Label Classes="SmallHeader" >Decryption Key</Label>
 		<ComboBox Name="SavedDecryptionKeys"
 				  ItemsSource="{Binding PrivatePgpKeys}"
 				  DisplayMemberBinding="{Binding DisplayName}"
-				  SelectedIndex="0">
+				  SelectedIndex="0"
+				  HorizontalAlignment="Stretch">
 		</ComboBox>
 		<TextBox Name="privateKeyPassword" 
 				 PasswordChar="*"
-				 Watermark="Private Key Password"></TextBox>
-		<TextBox Name="txtDecryptKey"></TextBox>
-		<Button Click="btnDecrypt_Click">Decrypt</Button>
+				 Watermark="Private Key Password"
+				 Margin="0 0 0 5"></TextBox>
+		<TextBox Name="txtDecryptKey"
+				 Margin="0 0 0 5"></TextBox>
+		<Button 
+			Classes="primaryBtn purpleBtn"
+			Click="btnDecrypt_Click">Decrypt Input</Button>
 	</StackPanel>
 </UserControl>

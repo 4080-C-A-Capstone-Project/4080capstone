@@ -23,6 +23,7 @@ public partial class EncryptionControl : UserControl
         InitializeComponent();
 
         encryptionMethod.ItemsSource = appState.EncryptionOptions;
+        
         rbText.IsCheckedChanged += RbInputType_CheckedChanged;
         rbFile.IsCheckedChanged += RbInputType_CheckedChanged;
         RbInputType_CheckedChanged(null, null);

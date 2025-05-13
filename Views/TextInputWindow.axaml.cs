@@ -18,6 +18,7 @@ public partial class TextInputWindow : Window
     public TextInputWindow()
     {
         InitializeComponent();
+        WindowStartupLocation = WindowStartupLocation.CenterOwner;
     }
 
     public Task<string?> ShowDialogAsync(Window parent, string savedInput = "")

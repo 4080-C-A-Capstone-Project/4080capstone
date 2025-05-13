@@ -18,6 +18,6 @@ namespace _4080capstone.ViewModels
         public DateTime ExpirationDate { get; set; }    // Expiration Date
         public string KeyId { get; set; } = "";         // Key ID
         public string Path { get; set; } = "";          // Path to key
-        public string DisplayName => UserIdentity + (Validity, CreationDateLocal); // Displayed in dropdown
+        public string DisplayName => UserIdentity + "  " + (Validity, CreationDateLocal); // Displayed in dropdown
     }
 }

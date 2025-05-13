@@ -32,7 +32,7 @@
 		<TextBlock Grid.Row="4" Margin="0 10">Key Material: curve25519</TextBlock>-->
 		
 		<StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-			<Button Margin="5" Width="80" Click="OKButton_Click" HorizontalContentAlignment="Center" >OK</Button>
+			<Button Margin="5" Width="80" Classes="purpleBtn" Click="OKButton_Click" HorizontalContentAlignment="Center" >OK</Button>
 			<Button Grid.Column="1" Width="80" Click="CancelButton_Click" HorizontalContentAlignment="Center" >Cancel</Button>
 		</StackPanel>
 	</StackPanel>

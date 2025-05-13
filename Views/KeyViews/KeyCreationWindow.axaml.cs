@@ -18,6 +18,7 @@ public partial class KeyCreationWindow : Window
     public KeyCreationWindow()
     {
         InitializeComponent();
+        WindowStartupLocation = WindowStartupLocation.CenterOwner;
     }
 
     public Task<bool?> ShowDialogAsync(Window parent, string name = "")
