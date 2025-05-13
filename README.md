@@ -1,4 +1,4 @@
-# Cryptic
+# Crypt#
 
 This capstone project aims to aid in encryption and decryption of text and files through 4 different means. 
 These include:
@@ -21,5 +21,3 @@ When you want to decrypt a file, you need to get the encrypted file, .cis, .xor,
 For OpenPGP, it works somewhat differently. You need to generate a Keyring that will have a public and a private key for you to use. To do this, click on the Keyring button and then you will see the buttons to generate a new key or import a key. If you choose to import a key, you need to import a .asc file to use as the key. If you choose to create a new key, you set up the identity, which is the name or email addresss, and the passphrase to protect the key. 
 
 After that, when you choose to use OpenPGP to encrypt a file, you are then able to select a key rather than have a key be generated for you. You can then encrypt the text or file that way as a .pgp file. When you want to decrypt the file, you need to select the appropriate .pgp file and then get the right key to unlock it, along with the private key password. That will allow you to access the text or file.
-
-TODO (Any clarity issues or problems?)
