@@ -6,8 +6,8 @@
              x:Class="_4080capstone.Views.EncDecView"
 		     xmlns:local="clr-namespace:_4080capstone.Views">
 	<StackPanel HorizontalAlignment="Center" VerticalAlignment="Top">
-		
-			<TabControl Margin="0">
+		<TextBlock HorizontalAlignment="Center" FontSize="24" Margin="10">Cryptography</TextBlock>
+		<TabControl Margin="0">
 				<!-- Encryption Tab -->
 				<TabItem Header="Encrypt">
 					<local:EncryptionControl/>

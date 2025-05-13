@@ -8,7 +8,7 @@
     <StackPanel HorizontalAlignment="Center">
 		<TextBlock HorizontalAlignment="Center" FontSize="24" Margin="10">Manage User</TextBlock>
 		
-		<TextBlock HorizontalAlignment="Center" Text="{Binding SessionInfo}"/>
+		<TextBlock Name="SessionInfoText" HorizontalAlignment="Center" Text="{Binding SessionInfo}"/>
         <Button Content="Set Username" HorizontalAlignment="Center" Margin="0 10 0 0" Click="SetUsername_Click" Name="setUserBtn" Classes="purpleBtn"></Button>
 
 		<!--		<TextBlock HorizontalAlignment="Center" FontSize="16" Margin="10 20 10 10">Session Keys</TextBlock>

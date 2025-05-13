@@ -31,7 +31,7 @@
 		<TextBox Name="privateKeyPassword" 
 				 PasswordChar="*"
 				 Watermark="Private Key Password"
-				 Margin="0 0 0 5"></TextBox>
+				 Margin="0 5 0 5"></TextBox>
 		<TextBox Name="txtDecryptKey"
 				 Margin="0 0 0 5"></TextBox>
 		<Button 

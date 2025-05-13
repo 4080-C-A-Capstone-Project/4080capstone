@@ -30,8 +30,8 @@ public partial class UserSettingsView : UserControl
         
         appState.CurrentUsername = input.Trim();
         appState.userKeys.Clear(); // reset
-
         KeyGenerator.GenerateKeys();
+        SessionInfoText.Text = appState.SessionInfo;
 
         var box = MessageBoxManager
             .GetMessageBoxStandard("Success", $"Keys saved to keys.aes for user: {appState.CurrentUsername}",
