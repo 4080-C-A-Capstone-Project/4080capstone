@@ -6,12 +6,12 @@
         x:Class="_4080capstone.Views.UserSettingsView">
     
     <StackPanel HorizontalAlignment="Center">
-		<TextBlock HorizontalAlignment="Stretch" FontSize="24" Margin="10">Manage User</TextBlock>
+		<TextBlock HorizontalAlignment="Center" FontSize="24" Margin="10">Manage User</TextBlock>
 		
 		<TextBlock HorizontalAlignment="Center" Text="{Binding SessionInfo}"/>
-        <Button Content="Set Username" HorizontalAlignment="Center" Click="SetUsername_Click" Name="setUserBtn" Classes="purpleBtn"></Button>
-		
-		<TextBlock HorizontalAlignment="Center" FontSize="16" Margin="10 20 10 10">Session Keys</TextBlock>
+        <Button Content="Set Username" HorizontalAlignment="Center" Margin="0 10 0 0" Click="SetUsername_Click" Name="setUserBtn" Classes="purpleBtn"></Button>
+
+		<!--		<TextBlock HorizontalAlignment="Center" FontSize="16" Margin="10 20 10 10">Session Keys</TextBlock>
 		<Grid RowDefinitions="* 40">
 			<DataGrid Name="SessionKeyTable"
 					  Margin="20 0 20 20"
@@ -28,6 +28,6 @@
 			<Grid Grid.Row="1" Margin="20 0" ColumnDefinitions="1* 5 1*" HorizontalAlignment="Right">
 				<Button Grid.Column="2" Content="Refresh Keys" Padding="10 5" Classes="purpleBtn" Click="GenerateKeys"/>
 			</Grid>
-		</Grid>
+		</Grid>-->
     </StackPanel>
 </UserControl>
