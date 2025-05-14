@@ -2,8 +2,10 @@
 
 This capstone project aims to aid in encryption and decryption of text and files through 4 different means. 
 These include:
+Symmetric:
 1. Caesar Cipher
 2. XOR
+Asymmetric:
 3. AES - Advanced Encryption System
 4. OpenPGP
 
